@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Tom Jeon" />
+
+
+<title>Import data read_csv</title>
+
+<script src="pandas_read_csv_tutorial_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="pandas_read_csv_tutorial_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="pandas_read_csv_tutorial_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="pandas_read_csv_tutorial_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="pandas_read_csv_tutorial_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="pandas_read_csv_tutorial_files/navigation-1.1/tabsets.js"></script>
+<link href="pandas_read_csv_tutorial_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="pandas_read_csv_tutorial_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Import data read_csv</h1>
+<h4 class="author"><em>Tom Jeon</em></h4>
+<h4 class="date"><em>May 3, 2018</em></h4>
+
+</div>
+
+
+<script src="https://cdn.datacamp.com/datacamp-light-latest.min.js"></script>
+<div id="pandas-tutorial-importing-data-with-read_csv" class="section level2">
+<h2>Pandas Tutorial: Importing Data with read_csv()</h2>
+<p><strong>The first step to any data science project is to import your data.</strong> Often, you’ll work with data in Comma Separated Value (CSV) files and run into problems at the very start of your workflow. In this tutorial, you’ll see how you can use the <code>read_csv()</code> function from <code>pandas</code> to deal with common problems when importing data and see why loading flat files specifically with <code>pandas</code> has become standard practice for working data scientists today.</p>
+<div id="the-filesystem" class="section level3">
+<h3>The filesystem</h3>
+<p>Before you can use <code>pandas</code> to import your data, you need to know where your data file is in your filesystem and what your current working directory is. You’ll see why this is important very soon, but let’s review some basic concepts:</p>
+<p>Everything on the computer is stored in the filesystem. ‘Directories’ is just another word for ‘folders’, and the ‘working directory’ is simply the folder you’re currently in. The <a href="https://www.datacamp.com/courses/introduction-to-shell-for-data-science">Introduction to Shell for Data Science</a> course on DataCamp will give you the full picture of its utility, but here are a few basic Shell commands to navigate your way in the filesystem:</p>
+<ul>
+<li>The <code>ls</code> command lists all content in the current working directory.</li>
+<li>The <code>cd</code> command followed by:
+<ul>
+<li>the name of a sub-directory allows you to change your working directory to the sub-directory you specify.</li>
+<li><code>..</code> allows you to navigate back to the parent directory of your current working directory.</li>
+</ul></li>
+<li>The <code>pwd</code> command prints the path of your current working directory.</li>
+</ul>
+<p>IPython allows you to execute Shell commands directly from the IPython console via its <em>magic commands</em>. Here are the ones that correspond to the commands you saw above:</p>
+<ul>
+<li><code>! ls</code> in IPython is the same as <code>ls</code> in the command line.</li>
+<li><code>%cd</code> in IPython is the same as <code>cd</code> in the command line.</li>
+<li><code>! pwd</code> in IPython is the same as <code>pwd</code> in the command line.</li>
+</ul>
+<p>In your filesystem, there’s a file called <code>cereal.csv</code> that contains <a href="https://www.kaggle.com/crawford/80-cereals">nutrition data on 80 cereals</a>. Using the IPython’s magic commands, can you locate it?</p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InB5dGhvbiIsInByZV9leGVyY2lzZV9jb2RlIjoiISBta2RpciBzdWJfZGlyMVxuISBta2RpciBzdWJfZGlyMlxuISBta2RpciBkYXRhX2RpclxuaW1wb3J0IHBhbmRhcyBhcyBwZFxuI2ltcG9ydCBvc1xuI2N3ZCA9IG9zLmdldGN3ZCgpXG5jZXJlYWwgPSBwZC5yZWFkX2NzdihcImh0dHA6Ly9pbnNpZ2h0LmRldi5zY2hvb2x3aXJlcy5jb20vSGVscEFzc2V0cy9DMkFzc2V0cy9DMkZpbGVzL0MySW1wb3J0Q2FsRXZlbnRTYW1wbGUuY3N2XCIpICMgVE9ETzogcmVwbGFjZSBsaW5rXG5jZXJlYWwudG9fY3N2KCdjZXJlYWwuY3N2JylcbiEgbXYgY2VyZWFsLmNzdiBkYXRhX2RpciIsInNhbXBsZSI6IiMgTGlzdCBjb250ZW50cyBpbiBjdXJyZW50IHdvcmtpbmcgZGlyZWN0b3J5XG5cbiMgTmF2aWdhdGUgaW50byBzdWItZGlyZWN0b3J5XG5cbiMgTGlzdCBjb250ZW50cyBvZiBzdWItZGlyZWN0b3J5XG5cbiMgUHJpbnQgbmV3IHdvcmtpbmcgZGlyZWN0b3J5XG4ifQ==
+</div>
+<p>Did you find it in the <code>data_dir</code> directory? Great!</p>
+</div>
+<div id="loading-your-data" class="section level3">
+<h3>Loading your data</h3>
+<p>Now that you know what your current working directory is and where the data is in your filesystem, you can specify the file path to it. You’re now ready to import the CSV file into Python using <code>read_csv()</code> from <code>pandas</code>:</p>
+<pre><code>import pandas as pd
+cereal_df = pd.read_csv(&quot;/tmp/tmp07wuam09/data_dir/cereal.csv&quot;)
+cereal_df2 = pd.read_csv(&quot;data_dir/cereal.csv&quot;)
+
+# Are they the same?
+print(pd.DataFrame.equals(cereal_df, cereal_df2))
+
+True</code></pre>
+<p>As you can see in the code chunk above, the file path is the first argument to <code>read_csv()</code> and it was specified in two ways. You can use the full file path which includes the working directory in the specification or just use the relative file path. The <code>read_csv()</code> function is smart enough to decipher whether it’s working with full or relative file paths and convert your flat file as a DataFrame without a problem. (Note: the environment for every DataCamp session is temporary, so the working directory you saw in the previous section may not be identical to the one you see in the code chunk above.)</p>
+<p>Continue on and see how else <code>pandas</code> makes importing CSV files easier. Let’s use some of the function’s customizable options, particularly for the way it deals with headers, incorrect data types, and missing data.</p>
+</div>
+<div id="dealing-with-headers" class="section level3">
+<h3>Dealing with headers</h3>
+<p>Headers refer to the column names of your dataset. For some datasets you might encounter, the headers may be completely missing, partially missing, or they might exist, but you may want to rename them. How can you deal with such issues effectively?</p>
+<p>Let’s take a closer look at your data:</p>
+<pre><code>df = pd.read_csv(&quot;data/cereal.csv&quot;)
+print(df.head(5))
+
+                         X.1      X.2      X.3       X.4      X.5      X.6  \
+0                       name      mfr     type  calories  protein      fat   
+1                  100% Bran        N        C        70        4        1   
+2          100% Natural Bran        Q  no info       120        3        5   
+3                   All-Bran  no info        C        70        4        1   
+4  All-Bran with Extra Fiber        K        C        50        4  no info   
+
+      X.7    X.8      X.9    X.10     X.11      X.12   X.13     X.14  X.15  \
+0  sodium  fiber    carbo  sugars   potass  vitamins  shelf   weight  cups   
+1       .     10  no info       6      280        25      3        1  0.33   
+2      15      2        8       8      135         0      .        1     1   
+3     260      9        7       5  no info        25      3        1  0.33   
+4     140     14        8       0      330        25      3  no info   0.5   
+
+        X.16  
+0     rating  
+1  68.402973  
+2    no info  
+3  59.425505  
+4  93.704912</code></pre>
+<p>It seems like the actual column names are <code>name</code>, <code>mfr</code>, …, <code>rating</code>, but it’s incorrectly imported as the first observation in the dataset! Luckily, the <code>read_csv()</code> function has an argument called <code>skiprows</code> that allows you to specify the line numbers to skip, or the number of lines to skip at the start of the file. In this case, it seems like you’d want to skip the first line, so let’s try importing your CSV file with <code>skiprows</code> set equal to 1:</p>
+<pre><code>df = pd.read_csv(&quot;data/cereal.csv&quot;, skiprows = 1)
+print(df.head(5))
+
+                        name      mfr     type  calories protein      fat  \
+0                  100% Bran        N        C        70       4        1   
+1          100% Natural Bran        Q  no info       120       3        5   
+2                   All-Bran  no info        C        70       4        1   
+3  All-Bran with Extra Fiber        K        C        50       4  no info   
+4             Almond Delight        R        C       110       2        2   
+
+  sodium  fiber    carbo  sugars   potass vitamins shelf   weight  cups  \
+0      .   10.0  no info       6      280       25     3        1  0.33   
+1     15    2.0        8       8      135        0     .        1  1.00   
+2    260    9.0        7       5  no info       25     3        1  0.33   
+3    140   14.0        8       0      330       25     3  no info  0.50   
+4    200    1.0       14       8       -1        .     3        1  0.75   
+
+      rating  
+0  68.402973  
+1    no info  
+2  59.425505  
+3  93.704912  
+4  34.384843  </code></pre>
+<p>Nice!</p>
+<p>Even when you don’t specify the headers, the <code>read_csv()</code> function correctly infers that the first observation contains the headers for the dataset. Not only that, <code>read_csv()</code> can infer the data types for each column of your dataset as well. For example, the <code>calories</code> column is an integer column, whereas the fiber column is a float column:</p>
+<pre><code>print(df[&#39;calories&#39;].dtypes)
+print(df[&#39;fiber&#39;].dtypes)
+
+int64
+float64</code></pre>
+</div>
+<div id="dealing-with-missing-values-and-incorrect-data-types" class="section level3">
+<h3>Dealing with missing values and incorrect data types</h3>
+<p>In <code>pandas</code>, columns with a string value are stored as type <code>object</code> by default. Because missing values in this dataset appear to be encoded as either <code>'no info'</code> or <code>'.'</code>, both string values, checking the data type for a column with missing values such as the <code>fat</code> column, you can see that its data type isn’t ideal:</p>
+<pre><code>print(df[&#39;fat&#39;].dtypes)
+
+object</code></pre>
+<p>When the column’s data type is a Python <code>object</code>, doing simple arithmetic results in unexpected results. This sort of behavior can be problematic when doing all sorts of tasks—visualizing distributions, finding outliers, training models—because you expect Python to treat numbers as numbers. That is, <span class="math inline">\(5 + 1\)</span> should not be <span class="math inline">\(51\)</span> as shown below:</p>
+<pre><code>print(df[&#39;fat&#39;][1])
+print(df[&#39;fat&#39;][2])
+print(df[&#39;fat&#39;][1] + df[&#39;fat&#39;][2])
+
+5
+1
+51</code></pre>
+<p>The <code>fat</code> column should be treated as type <code>int64</code> or <code>float64</code>, and missing data should be encoded as <code>NaN</code> so that you can apply statistics in a missing-value-friendly manner. Instead of parsing through each column and replacing <code>'no info'</code> and <code>'.'</code> with <code>NaN</code> values after the dataset is loaded, you can use the <code>na_values</code> argument to take care of those before it’s loaded:</p>
+<pre><code>df = pd.read_csv(&quot;data/cereal.csv&quot;, skiprows = 1, na_values = [&#39;no info&#39;, &#39;.&#39;])
+print(df.head(5))</code></pre>
+<p>Now let’s try the same arithmetic you saw a moment ago:</p>
+<pre><code>print(df[&#39;fat&#39;][1])
+print(df[&#39;fat&#39;][2])
+print(df[&#39;fat&#39;][1] + df[&#39;fat&#39;][2])
+
+5.0
+1.0
+6.0</code></pre>
+<p>Awesome. The values in the <code>fat</code> column are now treated as numerics.</p>
+</div>
+<div id="recap" class="section level3">
+<h3>Recap</h3>
+<p>With a single line of code involving <code>read_csv()</code> from <code>pandas</code>, you:</p>
+<ul>
+<li>Located the flat file you want to import from your filesystem.</li>
+<li>Corrected headers.</li>
+<li>Dealt with missing values so that they’re encoded properly.</li>
+<li>Corrected data types for every column.</li>
+<li>Converted a flat file to a DataFrame.</li>
+</ul>
+</div>
+<div id="final-thoughts" class="section level3">
+<h3>Final thoughts</h3>
+<p>Although the CSV file is one of the most common formats for storing data, there are many other file types that the modern day data scientist must be familiar with. You now have a good sense of how useful <code>pandas</code> is when importing the CSV file, and conveniently, <code>pandas</code> offers other similar and equally handy functions to import files in Excel, SAS, and Stata formats.</p>
+<p>Yet there are other essential techniques to master. Due to the active community in open source software, there is constant activity in file formats and ways to import data. Lots of useful, high quality datasets are hosted on the web and accessed through APIs. If you’re curious and want to know the state of the art, the <a href="https://www.datacamp.com/courses/importing-data-in-python-part-1">Importing Data in Python</a> course series on DataCamp will teach you best practices of importing all kinds of data into Python.</p>
+<p>Happy learning!</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

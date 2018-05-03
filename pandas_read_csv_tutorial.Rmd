@@ -1,0 +1,217 @@
+---
+title: "Import data read_csv"
+author: "Tom Jeon"
+date: "May 3, 2018"
+output:
+  html_document:
+    self_contained: false
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+tutorial::go_interactive()
+```
+
+## Pandas Tutorial: Importing Data with read_csv()
+
+**The first step to any data science project is to import your data.** Often, you'll work with data in Comma Separated Value (CSV) files and run into problems at the very start of your workflow. In this tutorial, you'll see how you can use the `read_csv()` function from `pandas` to deal with common problems when importing data and see why loading flat files specifically with `pandas` has become standard practice for working data scientists today.
+
+### The filesystem
+
+Before you can use `pandas` to import your data, you need to know where your data file is in your filesystem and what your current working directory is. You'll see why this is important very soon, but let's review some basic concepts:
+
+Everything on the computer is stored in the filesystem. 'Directories' is just another word for 'folders', and the 'working directory' is simply the folder you're currently in. The [Introduction to Shell for Data Science](https://www.datacamp.com/courses/introduction-to-shell-for-data-science) course on DataCamp will give you the full picture of its utility, but here are a few basic Shell commands to navigate your way in the filesystem:
+
+* The `ls` command lists all content in the current working directory.
+* The `cd` command followed by:
+    + the name of a sub-directory allows you to change your working directory to the sub-directory you specify.
+    + `..` allows you to navigate back to the parent directory of your current working directory.
+* The `pwd` command prints the path of your current working directory.
+
+IPython allows you to execute Shell commands directly from the IPython console via its _magic commands_. Here are the ones that correspond to the commands you saw above:
+
+- `! ls` in IPython is the same as `ls` in the command line.
+- `%cd` in IPython is the same as `cd` in the command line.
+- `! pwd` in IPython is the same as `pwd` in the command line.
+
+In your filesystem, there's a file called `cereal.csv` that contains [nutrition data on 80 cereals](https://www.kaggle.com/crawford/80-cereals). Using the IPython's magic commands, can you locate it?
+
+```{python ex="create_a", type="pre-exercise-code"}
+! mkdir sub_dir1
+! mkdir sub_dir2
+! mkdir data_dir
+import pandas as pd
+#import os
+#cwd = os.getcwd()
+cereal = pd.read_csv("http://insight.dev.schoolwires.com/HelpAssets/C2Assets/C2Files/C2ImportCalEventSample.csv") # TODO: replace link
+cereal.to_csv('cereal.csv')
+! mv cereal.csv data_dir
+```
+
+```{python ex="create_a", type="sample-code"}
+# List contents in current working directory
+
+# Navigate into sub-directory
+
+# List contents of sub-directory
+
+# Print new working directory
+
+```
+
+Did you find it in the `data_dir` directory? Great!
+
+### Loading your data
+
+Now that you know what your current working directory is and where the data is in your filesystem, you can specify the file path to it. You're now ready to import the CSV file into Python using `read_csv()` from `pandas`:
+
+```
+import pandas as pd
+cereal_df = pd.read_csv("/tmp/tmp07wuam09/data_dir/cereal.csv")
+cereal_df2 = pd.read_csv("data_dir/cereal.csv")
+
+# Are they the same?
+print(pd.DataFrame.equals(cereal_df, cereal_df2))
+
+True
+```
+
+As you can see in the code chunk above, the file path is the first argument to `read_csv()` and it was specified in two ways. You can use the full file path which includes the working directory in the specification or just use the relative file path. The `read_csv()` function is smart enough to decipher whether it's working with full or relative file paths and convert your flat file as a DataFrame without a problem. (Note: the environment for every DataCamp session is temporary, so the working directory you saw in the previous section may not be identical to the one you see in the code chunk above.)
+
+Continue on and see how else `pandas` makes importing CSV files easier. Let's use some of the function's customizable options, particularly for the way it deals with headers, incorrect data types, and missing data.
+
+### Dealing with headers
+
+Headers refer to the column names of your dataset. For some datasets you might encounter, the headers may be completely missing, partially missing, or they might exist, but you may want to rename them. How can you deal with such issues effectively?
+
+Let's take a closer look at your data:
+
+```
+df = pd.read_csv("data/cereal.csv")
+print(df.head(5))
+
+                         X.1      X.2      X.3       X.4      X.5      X.6  \
+0                       name      mfr     type  calories  protein      fat   
+1                  100% Bran        N        C        70        4        1   
+2          100% Natural Bran        Q  no info       120        3        5   
+3                   All-Bran  no info        C        70        4        1   
+4  All-Bran with Extra Fiber        K        C        50        4  no info   
+
+      X.7    X.8      X.9    X.10     X.11      X.12   X.13     X.14  X.15  \
+0  sodium  fiber    carbo  sugars   potass  vitamins  shelf   weight  cups   
+1       .     10  no info       6      280        25      3        1  0.33   
+2      15      2        8       8      135         0      .        1     1   
+3     260      9        7       5  no info        25      3        1  0.33   
+4     140     14        8       0      330        25      3  no info   0.5   
+
+        X.16  
+0     rating  
+1  68.402973  
+2    no info  
+3  59.425505  
+4  93.704912
+```
+
+It seems like the actual column names are `name`, `mfr`, ..., `rating`, but it's incorrectly imported as the first observation in the dataset! Luckily, the `read_csv()` function has an argument called `skiprows` that allows you to specify the line numbers to skip, or the number of lines to skip at the start of the file. In this case, it seems like you'd want to skip the first line, so let's try importing your CSV file with `skiprows` set equal to 1:
+
+```
+df = pd.read_csv("data/cereal.csv", skiprows = 1)
+print(df.head(5))
+
+                        name      mfr     type  calories protein      fat  \
+0                  100% Bran        N        C        70       4        1   
+1          100% Natural Bran        Q  no info       120       3        5   
+2                   All-Bran  no info        C        70       4        1   
+3  All-Bran with Extra Fiber        K        C        50       4  no info   
+4             Almond Delight        R        C       110       2        2   
+
+  sodium  fiber    carbo  sugars   potass vitamins shelf   weight  cups  \
+0      .   10.0  no info       6      280       25     3        1  0.33   
+1     15    2.0        8       8      135        0     .        1  1.00   
+2    260    9.0        7       5  no info       25     3        1  0.33   
+3    140   14.0        8       0      330       25     3  no info  0.50   
+4    200    1.0       14       8       -1        .     3        1  0.75   
+
+      rating  
+0  68.402973  
+1    no info  
+2  59.425505  
+3  93.704912  
+4  34.384843  
+```
+
+Nice!
+
+Even when you don't specify the headers, the `read_csv()` function correctly infers that the first observation contains the headers for the dataset. Not only that, `read_csv()` can infer the data types for each column of your dataset as well. For example, the `calories` column is an integer column, whereas the fiber column is a float column:
+
+```
+print(df['calories'].dtypes)
+print(df['fiber'].dtypes)
+
+int64
+float64
+```
+
+### Dealing with missing values and incorrect data types
+
+In `pandas`, columns with a string value are stored as type `object` by default. Because missing values in this dataset appear to be encoded as either `'no info'` or `'.'`, both string values, checking the data type for a column with missing values such as the `fat` column, you can see that its data type isn't ideal:
+
+```
+print(df['fat'].dtypes)
+
+object
+```
+
+When the column's data type is a Python `object`, doing simple arithmetic results in unexpected results. This sort of behavior can be problematic when doing all sorts of tasks—visualizing distributions, finding outliers, training models—because you expect Python to treat numbers as numbers. That is, $5 + 1$ should not be $51$ as shown below:
+
+```
+print(df['fat'][1])
+print(df['fat'][2])
+print(df['fat'][1] + df['fat'][2])
+
+5
+1
+51
+```
+
+The `fat` column should be treated as type `int64` or `float64`, and missing data should be encoded as `NaN` so that you can apply statistics in a missing-value-friendly manner. Instead of parsing through each column and replacing `'no info'` and `'.'` with `NaN` values after the dataset is loaded, you can use the `na_values` argument to take care of those before it's loaded:
+
+```
+df = pd.read_csv("data/cereal.csv", skiprows = 1, na_values = ['no info', '.'])
+print(df.head(5))
+```
+
+Now let's try the same arithmetic you saw a moment ago:
+
+```
+print(df['fat'][1])
+print(df['fat'][2])
+print(df['fat'][1] + df['fat'][2])
+
+5.0
+1.0
+6.0
+```
+
+Awesome. The values in the `fat` column are now treated as numerics.
+
+### Recap
+With a single line of code involving `read_csv()` from `pandas`, you:
+
+- Located the flat file you want to import from your filesystem.
+- Corrected headers.
+- Dealt with missing values so that they're encoded properly.
+- Corrected data types for every column.
+- Converted a flat file to a DataFrame.
+
+### Final thoughts
+
+Although the CSV file is one of the most common formats for storing data, there are many other file types that the modern day data scientist must be familiar with. You now have a good sense of how useful `pandas` is when importing the CSV file, and conveniently, `pandas` offers other similar and equally handy functions to import files in Excel, SAS, and Stata formats.
+
+Yet there are other essential techniques to master. Due to the active community in open source software, there is constant activity in file formats and ways to import data. Lots of useful, high quality datasets are hosted on the web and accessed through APIs. If you're curious and want to know the state of the art, the [Importing Data in Python](https://www.datacamp.com/courses/importing-data-in-python-part-1) course series on DataCamp will teach you best practices of importing all kinds of data into Python.
+
+Happy learning!
