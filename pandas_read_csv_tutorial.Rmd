@@ -24,7 +24,7 @@ tutorial::go_interactive()
 
 Before you can use `pandas` to import your data, you need to know where your data file is in your filesystem and what your current working directory is. You'll see why this is important very soon, but let's review some basic concepts:
 
-Everything on the computer is stored in the filesystem. 'Directories' is just another word for 'folders', and the 'working directory' is simply the folder you're currently in. The [Introduction to Shell for Data Science](https://www.datacamp.com/courses/introduction-to-shell-for-data-science) course on DataCamp will give you the full picture of its utility, but here are a few basic Shell commands to navigate your way in the filesystem:
+Everything on the computer is stored in the filesystem. 'Directories' is just another word for 'folders', and the 'working directory' is simply the folder you're currently in. The [Introduction to Shell for Data Science](https://www.datacamp.com/courses/introduction-to-shell-for-data-science) course on DataCamp will give you hands-on experience with the command line, but here are a few basic Shell commands to navigate your way in the filesystem:
 
 * The `ls` command lists all content in the current working directory.
 * The `cd` command followed by:
@@ -86,7 +86,7 @@ Continue on and see how else `pandas` makes importing CSV files easier. Let's us
 
 ### Dealing with headers
 
-Headers refer to the column names of your dataset. For some datasets you might encounter, the headers may be completely missing, partially missing, or they might exist, but you may want to rename them. How can you deal with such issues effectively?
+Headers refer to the column names of your dataset. For some datasets you might encounter, the headers may be completely missing, partially missing, or they might exist, but you may want to rename them. How can you deal with such issues effectively with `pandas`?
 
 Let's take a closer look at your data:
 
@@ -146,7 +146,7 @@ print(df.head(5))
 
 Nice!
 
-Even when you don't specify the headers, the `read_csv()` function correctly infers that the first observation contains the headers for the dataset. Not only that, `read_csv()` can infer the data types for each column of your dataset as well. For example, the `calories` column is an integer column, whereas the fiber column is a float column:
+Even when you don't specify the headers, the `read_csv()` function correctly infers that the first observation contains the headers for the dataset. Not only that, `read_csv()` can infer the data types for each column of your dataset as well. You can see below the `calories` column is an integer column, whereas the `fiber` column is a float column:
 
 ```
 print(df['calories'].dtypes)
@@ -178,7 +178,7 @@ print(df['fat'][1] + df['fat'][2])
 51
 ```
 
-The `fat` column should be treated as type `int64` or `float64`, and missing data should be encoded as `NaN` so that you can apply statistics in a missing-value-friendly manner. Instead of parsing through each column and replacing `'no info'` and `'.'` with `NaN` values after the dataset is loaded, you can use the `na_values` argument to take care of those before it's loaded:
+The `fat` column should be treated as type `int64` or `float64`, and missing data should be encoded as `NaN` so that you can apply statistics in a missing-value-friendly manner. Instead of parsing through each column and replacing `'no info'` and `'.'` with `NaN` values after the dataset is loaded, you can use the `na_values` argument to the `read_csv()` function to take care of those before it's loaded:
 
 ```
 df = pd.read_csv("data/cereal.csv", skiprows = 1, na_values = ['no info', '.'])
@@ -210,7 +210,7 @@ With a single line of code involving `read_csv()` from `pandas`, you:
 
 ### Final thoughts
 
-Although the CSV file is one of the most common formats for storing data, there are many other file types that the modern day data scientist must be familiar with. You now have a good sense of how useful `pandas` is when importing the CSV file, and conveniently, `pandas` offers other similar and equally handy functions to import files in Excel, SAS, and Stata formats.
+Although the CSV file is one of the most common formats for storing data, there are many other file types that the modern day data scientist must be familiar with. You now have a good sense of how useful `pandas` is when importing the CSV file, and conveniently, `pandas` offers other similar and equally handy functions to import files in Excel, SAS, and Stata formats to name a few.
 
 Yet there are other essential techniques to master. Due to the active community in open source software, there is constant activity in file formats and ways to import data. Lots of useful, high quality datasets are hosted on the web and accessed through APIs. If you're curious and want to know the state of the art, the [Importing Data in Python](https://www.datacamp.com/courses/importing-data-in-python-part-1) course series on DataCamp will teach you best practices of importing all kinds of data into Python.
 
