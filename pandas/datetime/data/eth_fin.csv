@@ -1,4 +1,4 @@
-date,txVolume(USD),txCount,marketcap(USD),price(USD),generatedCoins,exchangeVolume(USD)
+date,txVolume,txCount,marketCap,price,generatedCoins,exchangeVolume
 2015-08-10,1193012.00155,2037,4313e4,0.713989,27817.34375,405283
 2015-08-11,1052027.18443,4963,42796500,0.708087,28027.8125,1463100
 2015-08-12,792336.960964,2036,64018400,1.06,27370.9375,2150620
