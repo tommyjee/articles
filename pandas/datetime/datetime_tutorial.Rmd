@@ -1,7 +1,7 @@
 ---
-title: "Python Tutorial: Converting date strings to datetime format"
+title: "Python Tutorial: Converting strings to dates as `datetime` objects"
 author: "Tom Jeon"
-date: "May 30, 2018"
+date: "June 4, 2018"
 output:
   html_document:
     self_contained: false
@@ -12,25 +12,25 @@ output:
 tutorial::go_interactive()
 ```
 
-# Python Tutorial: Converting date strings to datetime format
+# Python Tutorial: Converting strings to dates as `datetime` objects
 
-## Learn how to convert date strings to the `datetime` type in Python and learn why it has become standard practice for working data scientists today.
+## Learn how to convert strings to `datetime` objects in Python and why doing so has become standard practice for working data scientists today.
 
-When analyzing datasets with dates and times, there is often a lot to think about. Months of different lengths, different distributions of weekdays and weekends, leap years, and the dreaded timezones are just a few things you may have to consider depending on your context. For this reason, Python has a data type specifically designed for dates and times called `datetime`.
+**Analyzing datasets with dates and times is often very cumbersome.** Months of different lengths, different distributions of weekdays and weekends, leap years, and the dreaded timezones are just a few things you may have to consider depending on your context. For this reason, Python has a data type specifically designed for dates and times called `datetime`.
 
-However, in many datasets, you'll find dates are represented as strings. So, in this tutorial, you'll learn how to convert date strings to the `datetime` format and see how you can use its powerful set of functionalities to work effectively with complicated chronological data.
+However, in many datasets, you'll find that dates are represented as strings. So, in this tutorial, you'll learn how to convert date strings to the `datetime` format and see how you can use its powerful set of tools to work effectively with complicated time series data.
 
 ### Dealing with different representations of dates
 
-The biggest challenge is often specifying how the date string is specified. For example, `'Wednesday, May 30, 2018'` can be represented as `'5/30/18'` and `'05-30-2018'`. These all mean the same thing, but you can probably imagine that the code to convert each of these would be slightly different. Take a moment to examine the code below:
+The main challenge is often specifying how date strings are expressed. For example, `'Wednesday, June 6, 2018'` can be represented as `'6/6/18'` and `'06-06-2018'` too. These all inform you of the same date, but you can probably imagine that the code to convert each of these is slightly different. Take a moment to examine the function calls below:
 
 ```
 from datetime import datetime
 
 # Define dates as strings
-date_str1 = 'Wednesday, May 30, 2018'
-date_str2 = '5/30/18'
-date_str3 = '05-30-2018'
+date_str1 = 'Wednesday, June 6, 2018'
+date_str2 = '6/6/18'
+date_str3 = '06-06-2018'
 
 # Define dates as datetime objects
 date_dt1 = datetime.strptime(date_str1, '%A, %B %d, %Y')
@@ -44,12 +44,12 @@ print(date_dt3)
 ```
 
 ```
-2018-05-30 00:00:00
-2018-05-30 00:00:00
-2018-05-30 00:00:00
+2018-06-06 00:00:00
+2018-06-06 00:00:00
+2018-06-06 00:00:00
 ```
 
-First, you have to import the `datetime` type from the `datetime` module. Then you pass the date string to the `.strptime()` method, followed by what's called Python's `strptime` directives. You can combine directives, special characters (e.g.  `,`, `/`, or `-` as in the cases above), and spaces to match the date string you are trying to parse. As you can see, the resulting `datetime` objects are identical because all three date strings represent the same date.
+First, the `datetime` type is imported from the `datetime` module. Then, the date string is passed to the `.strptime()` method, followed by what's called Python's `strptime` directives. You can combine directives, special characters (e.g.  `,`, `/`, or `-` as in the cases above), and spaces to match the date string you are trying to parse. As you can see, the resulting `datetime` objects are identical because all three date strings represent the same date.
 
 You can find the full list of directives in the [Python Documentation](http://strftime.org/), but below is a table most relevant to what you saw above:
 
@@ -57,17 +57,17 @@ You can find the full list of directives in the [Python Documentation](http://st
 |------|---------------------------------------|----------------|
 | %A   | Weekday as locale’s full name.        | Wednesday      |
 | %a   | Weekday as locale’s abbreviated name. | Wed            |
-| %B   | Month as locale’s full name.          | May            |
-| %d   | Day of the month.                     | 30             |
-| %m   | Month as a number.                    | 05             |
+| %B   | Month as locale’s full name.          | June           |
+| %d   | Day of the month.                     | 06             |
+| %m   | Month as a number.                    | 6              |
 | %Y   | Four-digit year.                      | 2018           |
 | %y   | Two-digit year.                       | 18             |
 
 ### Converting the date string column
 
-Now that you know how to convert date strings to the `datetime` format, let's learn how to do so when you have a column of date strings in a dataset.
+Now that you're familiar with Python's `strptime` directives, let's learn how to convert a whole column of date strings in a dataset to the `datetime` format.
 
-You'll be working with a DataFrame called `eth` that contains some [historical data](https://coinmetrics.io/data-downloads/) on Ether, a cryptocurrency whose blockchain is generated by the Ethereum platform. Your dataset has the following columns:
+From now on, you'll be working with a DataFrame called `eth` that contains some [historical data](https://coinmetrics.io/data-downloads/) on ether, a cryptocurrency whose blockchain is generated by the Ethereum platform. Your dataset has the following columns:
 
 - `date`: Date, daily at 00:00 UTC.
 - `txVolume`: Unadjusted measure of the total value, in US dollars, of outputs on the blockchain.
@@ -122,7 +122,7 @@ memory usage: 55.5+ KB
 None
 ```
 
-The `date` column is indeed a string, which is denoted as an `object` type in Python. You can convert it to a `datetime` type with the `.to_datetime()` method in `pandas`. The console below contains the call to convert the column. Can you complete the call by specifying the directives accordingly?
+The `date` column is indeed a string, which—remember—is denoted as an `object` type in Python. You can convert it to the `datetime` type with the `.to_datetime()` method in `pandas`. The console below contains the call to convert the column. Can you complete it by specifying the directives according to how dates are expressed in your dataset?
 
 ```{python ex="create_a", type="pre-exercise-code"}
 import pandas as pd
@@ -142,7 +142,7 @@ Did you complete it using `'%Y-%m-%d'`? Great!
 
 ### Components of `datetime` objects
 
-Now that you have a `datetime` object, you can get specific components of the date such as the month, day, or year, which are all available as attributes:
+Now that you have `datetime` objects as your date column, you can extract specific components of the date such as the month, day, or year, all of which are available as the object's attributes:
 
 ```
 # Print datetime attributes
@@ -157,7 +157,7 @@ print(eth['date'][0].year)
 2015
 ```
 
-Date attributes are often used to group data by a particular time frame. For example, you can see how many ethers were generated on a yearly basis:
+Date attributes are frequently used to group data by a particular time frame. For example, you can see how many ethers were generated on a yearly basis:
 
 ```
 from collections import defaultdict
@@ -204,10 +204,10 @@ from datetime import datetime
 ```
 
 ```{python ex="create_b", type="sample-code"}
-# Import timedelta from the datetime module
+# Import timedelta from datetime module
 from datetime import timedelta
 
-# Build a timedelta of 59 days, 4 hours, 42 minutes
+# Define timedelta of 59 days, 4 hours, 42 minutes
 glanceback = timedelta(days=59,
                        hours=4,
                        minutes=42)
@@ -216,13 +216,13 @@ glanceback = timedelta(days=59,
 right_now = datetime.now()
 print(right_now)
 
-# Print the date and time 59 days, 4 hours, 42 minutes ago
+# When was 59 days, 4 hours, 42 minutes ago?
 print(right_now - glanceback)
 ```
 
 ### Indexing pandas DataFrames with DatetimeIndex
 
-After you've converted the `date` column to the `datetime` format, it is usually a good idea to index your DataFrame by the date, creating the `DatetimeIndex`. Like the `datetime` type, the `DatetimeIndex` is a special type of index designed to work with dates and times. By using the `.set_index()` method with the `inplace` argument set equal to `True`, you can remove the `date` column from your dataset and include it as the index of your DataFrame:
+After you've converted the `date` column to the `datetime` format, it is usually a good idea to index your DataFrame by the date, creating the `DatetimeIndex`. Like the `datetime` type, the `DatetimeIndex` is a special index type designed to work with dates and times. By using the `.set_index()` method with the `inplace` argument set equal to `True`, you can remove the `date` column from your dataset and append it as the index of your DataFrame:
 
 ```
 # Set index
@@ -248,7 +248,7 @@ date
 2015-08-14       4637030.0  
 ```
 
-Setting the `DatetimeIndex` in your DataFrame allows a much more powerful and flexible set of tools to use when plotting your time series data. For example, `pandas` automatically creates reasonably spaced date labels for the x-axis:
+Setting the `DatetimeIndex` in your DataFrame unlocks a whole set of useful functionalities. For example, when visualizing your time series data, `pandas` automatically creates reasonably spaced date labels for the x-axis:
 
 ```
 eth.txCount.plot(title='# of transactions')
@@ -261,7 +261,7 @@ Pretty neat, right?
 
 ### Partial string indexing and slicing
 
-Perhaps the most convenient features are partial string indexing and slicing, which allow easy subsetting of your data. Let's say you wanted to take a closer look at the peak around January 2018. The following code uses partial string indexing and slicing to observe the number of transactions between December 2017 and February 2018.
+Perhaps the most useful functionalities are partial string indexing and slicing, which allow you to easily subset your data. Let's say you wanted to take a closer look at the peak around January 2018 as seen in the graph above. The following code uses partial string indexing and slicing to observe the number of transactions between December 2017 and February 2018.
 
 ```
 # Subset data around peak
@@ -271,7 +271,7 @@ peak_eth.txCount.plot(title='# of transactions around peak')
 
 ![](~/dc/articles/pandas/datetime/data/txns_peak.png)
 
-It's important to note here that partial string indexing is inclusive of the boundaries, which is different from typical Python indexing.
+Well, that was easy! Did you notice that the boundaries are inclusive for partial string indexing unlike for typical Python indexing?
 
 ### Recap
 
@@ -280,12 +280,12 @@ From stock prices to flight timings, data containing dates and times are abudant
 In this tutorial, you:
 
 - Learned about Python's directives to deal with the various ways dates can be represented.
-- Learned how to convert date strings to the `datetime` format with the `.strptime()` method in the `datetime` module.
-- Learned how to convert date columns in DataFrames with the `.to_datetime()` method in `pandas`.
-- Learned about the components of the `datetime` object and how to access them.
+- Learned how to convert strings to dates with the `.strptime()` method in the `datetime` module.
+- Learned how to convert date string columns in DataFrames with the `.to_datetime()` method in `pandas`.
+- Learned about the components of the `datetime` object and how to access them as the object's attributes.
 - Learned how to do date arithmetic with the `timedelta` object.
-- Learned to index DataFrames with `DatetimeIndex` and its benefits.
+- Learned to index DataFrames with `DatetimeIndex` and explored some of examples of its usefulness.
 
-The `datetime` and `DatetimeIndex` objects in Python offer a much more manageable and intuitive way to deal with dates and times. Often, such data is called time series data. If you're curious and want to learn more about how to manipulate, analyze, and visualize time series data, check out the [Manipulating Time Series Data in Python](https://www.datacamp.com/courses/manipulating-time-series-data-in-python), [Introduction to Time Series Analysis in Python](https://www.datacamp.com/courses/introduction-to-time-series-analysis-in-python), and [Visualizing Time Series Data in Python](https://www.datacamp.com/courses/visualizing-time-series-data-in-python) courses on DataCamp.
+The `datetime` and `DatetimeIndex` objects in Python offer a much more manageable and intuitive way to deal with dates and times. If you're curious about learning more advanced techniques and eager to get some hands-on practice manipulating, analyzing, and visualizing time series data, check out the [Manipulating Time Series Data in Python](https://www.datacamp.com/courses/manipulating-time-series-data-in-python), [Introduction to Time Series Analysis in Python](https://www.datacamp.com/courses/introduction-to-time-series-analysis-in-python), and [Visualizing Time Series Data in Python](https://www.datacamp.com/courses/visualizing-time-series-data-in-python) courses on DataCamp.
 
 Happy learning!
