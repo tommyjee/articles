@@ -284,7 +284,7 @@ In this tutorial, you:
 - Learned how to convert date string columns in DataFrames with the `.to_datetime()` method in `pandas`.
 - Learned about the components of the `datetime` object and how to access them as the object's attributes.
 - Learned how to do date arithmetic with the `timedelta` object.
-- Learned to index DataFrames with `DatetimeIndex` and explored some of examples of its usefulness.
+- Learned to index DataFrames with `DatetimeIndex` and explored some examples of its usefulness.
 
 The `datetime` and `DatetimeIndex` objects in Python offer a much more manageable and intuitive way to deal with dates and times. If you're curious about learning more advanced techniques and eager to get some hands-on practice manipulating, analyzing, and visualizing time series data, check out the [Manipulating Time Series Data in Python](https://www.datacamp.com/courses/manipulating-time-series-data-in-python), [Introduction to Time Series Analysis in Python](https://www.datacamp.com/courses/introduction-to-time-series-analysis-in-python), and [Visualizing Time Series Data in Python](https://www.datacamp.com/courses/visualizing-time-series-data-in-python) courses on DataCamp.
 
