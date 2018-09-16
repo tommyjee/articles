@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Tom Jeon" />
+
+
+<title>Subsetting Datasets in R Tutorial</title>
+
+<script src="subsetting_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="subsetting_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="subsetting_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="subsetting_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="subsetting_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="subsetting_files/navigation-1.1/tabsets.js"></script>
+<link href="subsetting_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="subsetting_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Subsetting Datasets in R Tutorial</h1>
+<h4 class="author"><em>Tom Jeon</em></h4>
+<h4 class="date"><em>May 3, 2018</em></h4>
+
+</div>
+
+
+<script src="https://cdn.datacamp.com/datacamp-light-latest.min.js"></script>
+<div id="subsetting-datasets-in-r-tutorial" class="section level2">
+<h2>Subsetting Datasets in R Tutorial</h2>
+<div id="subsetting-datasets-is-a-crucial-skill-for-any-data-professional.-learn-and-practice-subsetting-data-in-this-quick-interactive-tutorial" class="section level3">
+<h3>Subsetting datasets is a crucial skill for any data professional. Learn and practice subsetting data in this quick interactive tutorial!</h3>
+<p>Whether you’re comparing how different demographics respond to marketing campaigns, zooming in on a specific time period, or pulling information about a select few products of many, subsetting datasets is necessary when you want to take a closer look at your data. R is a great tool that makes subsetting data easy and intuitive. By the end of this tutorial, you’ll have the know-how to extract the information you want from your dataset.</p>
+<p>Most commonly, data are in rows and columns, so subsetting your data is simply selecting certain rows and/or columns based on some criteria you have in mind. In general, there are three ways to subset the rows and columns of your dataset—by index, by name, and by value.</p>
+</div>
+<div id="subsetting-rows-and-columns-by-index" class="section level3">
+<h3>Subsetting rows and columns by index</h3>
+<p>One way to subset your rows and columns is by your dataset’s indices. This is the same as describing your rows and columns as “the first row”, “all rows in second and fifth columns”, or “the first row in second to fifth columns”. Let’s see how you can specify such phrases using a dataset called <code>iris</code> in R. From the documentation, “[t]his famous (Fisher’s or Anderson’s) iris dataset gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica.”</p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJzYW1wbGUiOiIjIFwiVGhlIGZpcnN0IHJvd1wiOlxuaXJpc1sxLCBdXG5cbiMgXCJBbGwgcm93cyBpbiBzZWNvbmQgYW5kIGZpZnRoIGNvbHVtbnNcIjpcbmlyaXNbLCBjKDIsIDUpXVxuXG4jIFwiVGhlIGZpcnN0IHJvdyBpbiBzZWNvbmQgdG8gZmlmdGggY29sdW1uc1wiOlxuaXJpc1sxLCAyOjVdIn0=
+</div>
+<p>As you can see, square brackets are used after your dataset object. The rows of your dataset are specified as the first element inside the square brackets and the columns of your dataset are specified as the second, separated by a comma:</p>
+<pre><code>data[rows, columns]</code></pre>
+</div>
+<div id="subsetting-rows-and-columns-by-name" class="section level3">
+<h3>Subsetting rows and columns by name</h3>
+<p>In R, the rows and columns of your dataset have name attributes. Row names are rarely used and by default provide indices—integers numbering from 1 to the number of rows of your dataset—just like what you saw in the previous section. In fact, if you called <code>rownames()</code> on the <code>iris</code> dataset, you will see that these are just indexed from 1 to 150:</p>
+<pre><code>&gt; rownames(iris)
+[1] &quot;1&quot;   &quot;2&quot;   &quot;3&quot;   &quot;4&quot;   &quot;5&quot;   &quot;6&quot;   &quot;7&quot;   &quot;8&quot;   &quot;9&quot;   &quot;10&quot;  &quot;11&quot;  &quot;12&quot;  &quot;13&quot;  &quot;14&quot; 
+[15] &quot;15&quot;  &quot;16&quot;  &quot;17&quot;  &quot;18&quot;  &quot;19&quot;  &quot;20&quot;  &quot;21&quot;  &quot;22&quot;  &quot;23&quot;  &quot;24&quot;  &quot;25&quot;  &quot;26&quot;  &quot;27&quot;  &quot;28&quot; 
+[29] &quot;29&quot;  &quot;30&quot;  &quot;31&quot;  &quot;32&quot;  &quot;33&quot;  &quot;34&quot;  &quot;35&quot;  &quot;36&quot;  &quot;37&quot;  &quot;38&quot;  &quot;39&quot;  &quot;40&quot;  &quot;41&quot;  &quot;42&quot; 
+[43] &quot;43&quot;  &quot;44&quot;  &quot;45&quot;  &quot;46&quot;  &quot;47&quot;  &quot;48&quot;  &quot;49&quot;  &quot;50&quot;  &quot;51&quot;  &quot;52&quot;  &quot;53&quot;  &quot;54&quot;  &quot;55&quot;  &quot;56&quot; 
+[57] &quot;57&quot;  &quot;58&quot;  &quot;59&quot;  &quot;60&quot;  &quot;61&quot;  &quot;62&quot;  &quot;63&quot;  &quot;64&quot;  &quot;65&quot;  &quot;66&quot;  &quot;67&quot;  &quot;68&quot;  &quot;69&quot;  &quot;70&quot; 
+[71] &quot;71&quot;  &quot;72&quot;  &quot;73&quot;  &quot;74&quot;  &quot;75&quot;  &quot;76&quot;  &quot;77&quot;  &quot;78&quot;  &quot;79&quot;  &quot;80&quot;  &quot;81&quot;  &quot;82&quot;  &quot;83&quot;  &quot;84&quot; 
+[85] &quot;85&quot;  &quot;86&quot;  &quot;87&quot;  &quot;88&quot;  &quot;89&quot;  &quot;90&quot;  &quot;91&quot;  &quot;92&quot;  &quot;93&quot;  &quot;94&quot;  &quot;95&quot;  &quot;96&quot;  &quot;97&quot;  &quot;98&quot; 
+[99] &quot;99&quot;  &quot;100&quot; &quot;101&quot; &quot;102&quot; &quot;103&quot; &quot;104&quot; &quot;105&quot; &quot;106&quot; &quot;107&quot; &quot;108&quot; &quot;109&quot; &quot;110&quot; &quot;111&quot; &quot;112&quot;
+[113] &quot;113&quot; &quot;114&quot; &quot;115&quot; &quot;116&quot; &quot;117&quot; &quot;118&quot; &quot;119&quot; &quot;120&quot; &quot;121&quot; &quot;122&quot; &quot;123&quot; &quot;124&quot; &quot;125&quot; &quot;126&quot;
+[127] &quot;127&quot; &quot;128&quot; &quot;129&quot; &quot;130&quot; &quot;131&quot; &quot;132&quot; &quot;133&quot; &quot;134&quot; &quot;135&quot; &quot;136&quot; &quot;137&quot; &quot;138&quot; &quot;139&quot; &quot;140&quot;
+[141] &quot;141&quot; &quot;142&quot; &quot;143&quot; &quot;144&quot; &quot;145&quot; &quot;146&quot; &quot;147&quot; &quot;148&quot; &quot;149&quot; &quot;150&quot;
+
+&gt; nrow(iris)
+[1] 150</code></pre>
+<p>Row names are more common in smaller datasets and are used to make observations in your dataset easily identifiable. For example, for a small dataset containing health information of a doctor’s patients, the row names of this dataset could be the full names of the patients.</p>
+<p>Column names on the other hand, are ubiquitous to almost any dataset. You can access these with the <code>colnames()</code> function or the <code>names()</code> function:</p>
+<pre><code>&gt; colnames(iris)
+[1] &quot;Sepal.Length&quot; &quot;Sepal.Width&quot;  &quot;Petal.Length&quot; &quot;Petal.Width&quot;  &quot;Species&quot;     
+
+&gt; names(iris)
+[1] &quot;Sepal.Length&quot; &quot;Sepal.Width&quot;  &quot;Petal.Length&quot; &quot;Petal.Width&quot;  &quot;Species&quot; </code></pre>
+<p>To subset your dataset by the names of your rows and columns, simply use the square brackets again, prefixed by your dataset object:</p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJzYW1wbGUiOiIjIFNlcGFsIHdpZHRoIG9mIHRoZSBmaWZ0aCBvYnNlcnZhdGlvblxuaXJpc1tcIjVcIiwgXCJTZXBhbC5XaWR0aFwiXVxuXG4jIFNlcGFsIHdpZHRoIGFuZCBwZXRhbCB3aWR0aFxuaXJpc1ssIGMoXCJTZXBhbC5XaWR0aFwiLCBcIlBldGFsLldpZHRoXCIpXSJ9
+</div>
+<p>It’s important to note that both the row and column names are stored as characters, so using single or double quotes is absolutely necessary!</p>
+</div>
+<div id="subsetting-rows-and-columns-by-value" class="section level3">
+<h3>Subsetting rows and columns by value</h3>
+<p>Subsetting your rows and columns by value often allows the most flexibility. For example, you can extract the data on Iris setosa using a conditional statement like this:</p>
+<pre><code>&gt; iris[iris$Species == &quot;setosa&quot;, ]
+Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1           5.1         3.5          1.4         0.2  setosa
+2           4.9         3.0          1.4         0.2  setosa
+3           4.7         3.2          1.3         0.2  setosa
+4           4.6         3.1          1.5         0.2  setosa
+
+...
+
+47          5.1         3.8          1.6         0.2  setosa
+48          4.6         3.2          1.4         0.2  setosa
+49          5.3         3.7          1.5         0.2  setosa
+50          5.0         3.3          1.4         0.2  setosa</code></pre>
+<p>Conditional statements like <code>iris$Species == &quot;setosa&quot;</code> belong in the row element in the square brackets (i.e. the first element before the comma). In addition to the conditional statement in the first element, you can specify columns by index or name in the second element. In the console below, try selecting just the sepal measurements of Iris setosa:</p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJzYW1wbGUiOiIjIFByaW50IHNlcGFsIG1lYXN1cmVtZW50cyBmb3Igc2V0b3NhIiwic29sdXRpb24iOiIjIFByaW50IHNlcGFsIG1lYXN1cmVtZW50cyBmb3Igc2V0b3NhIChieSBuYW1lKVxuaXJpc1tpcmlzJFNwZWNpZXMgPT0gXCJzZXRvc2FcIiwgYyhcIlNlcGFsLkxlbmd0aFwiLCBcIlNlcGFsLldpZHRoXCIpXVxuXG4jIFByaW50IHNlcGFsIG1lYXN1cmVtZW50cyBmb3Igc2V0b3NhIChieSBpbmRleClcbmlyaXNbaXJpcyRTcGVjaWVzID09IFwic2V0b3NhXCIsIDE6Ml0iLCJzY3QiOiJ0ZXN0X29yKFxuICB0ZXN0X291dHB1dF9jb250YWlucygnaXJpc1tpcmlzJFNwZWNpZXMgPT0gXCJzZXRvc2FcIiwgYyhcIlNlcGFsLkxlbmd0aFwiLCBcIlNlcGFsLldpZHRoXCIpXScsXG4gICAgICAgICAgICAgICAgICAgICAgIGluY29ycmVjdF9tc2cgPSBcIlNlbGVjdCBqdXN0IHRoZSBgU2VwYWwuTGVuZ3RoYCBhbmQgYFNlcGFsLldpZHRoYCBjb2x1bW5zIGZvciB0aGUgc2V0b3NhIGlyaXMgZWl0aGVyIGJ5IG5hbWUgb3IgaW5kZXguXCIpLCBcbiAgdGVzdF9vdXRwdXRfY29udGFpbnMoJ2lyaXNbaXJpcyRTcGVjaWVzID09IFwic2V0b3NhXCIsIGMoXCJTZXBhbC5XaWR0aFwiLCBcIlNlcGFsLkxlbmd0aFwiKV0nLFxuICAgICAgICAgICAgICAgICAgICAgICBpbmNvcnJlY3RfbXNnID0gXCJTZWxlY3QganVzdCB0aGUgYFNlcGFsLkxlbmd0aGAgYW5kIGBTZXBhbC5XaWR0aGAgY29sdW1ucyBmb3IgdGhlIHNldG9zYSBpcmlzIGVpdGhlciBieSBuYW1lIG9yIGluZGV4LlwiKSlcbnN1Y2Nlc3NfbXNnKFwiR3JlYXQgd29yayFcIikifQ==
+</div>
+</div>
+<div id="practice-exercises" class="section level3">
+<h3>Practice exercises</h3>
+<p>Let’s try practicing what you’ve learned thus far!</p>
+<p><strong>Select all observations for which the sepal width is greater than the petal length.</strong></p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJzYW1wbGUiOiIjIFdoaWNoIG9ic2VydmF0aW9ucyBoYXZlIGdyZWF0ZXIgc2VwYWwgbGVuZ3RoIHRoYW4gcGV0YWwgbGVuZ3RoPyIsInNvbHV0aW9uIjoiIyBXaGljaCBvYnNlcnZhdGlvbnMgaGF2ZSBncmVhdGVyIHNlcGFsIHdpZHRoIHRoYW4gcGV0YWwgbGVuZ3RoP1xuaXJpc1tpcmlzJFNlcGFsLldpZHRoID4gaXJpcyRQZXRhbC5MZW5ndGgsIF0iLCJzY3QiOiJ0ZXN0X291dHB1dF9jb250YWlucygnaXJpc1tpcmlzJFNlcGFsLldpZHRoID4gaXJpcyRQZXRhbC5MZW5ndGgsIF0nLFxuICAgICAgICAgICAgICAgICAgICAgaW5jb3JyZWN0X21zZyA9IFwiTm90IHF1aXRlISBTZWxlY3QgdGhlIG9ic2VydmF0aW9ucyBmb3Igd2hpY2ggdmFsdWVzIGZvciBgU2VwYWwuV2lkdGhgIGlzIGxhcmdlciB0aGFuIHRob3NlIGZvciBgUGV0YWwuTGVuZ3RoYC5cIilcbnN1Y2Nlc3NfbXNnKFwiTmljZSEgVHVybnMgb3V0IHRoaXMgaXMgdGhlIGNhc2Ugb25seSBmb3IgSXJpcyBzZXRvc2EuXCIpIiwiaGludCI6IlRyeSB1c2luZyB0aGUgPGNvZGU+aXJpcyRTZXBhbC5XaWR0aCAmZ3Q7IGlyaXMkUGV0YWwuTGVuZ3RoPC9jb2RlPiBjb25kaXRpb25hbCBpbiB0aGUgc3F1YXJlIGJyYWNrZXRzISJ9
+</div>
+<p><strong>Select all Iris versicolor whose sepal width is larger than the average sepal width among all species.</strong></p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJzYW1wbGUiOiIjIFN0b3JlIHRoZSB2ZXJzaWNvbG9yIGRhdGEgYXMgYW4gb2JqZWN0IGNhbGxlZCBgdmVyc2ljb2xvcmBcblxuXG4jIFNlbGVjdCBmb3IgYWxsIElyaXMgdmVyc2ljb2xvciB0aGF0IGhhdmUgYmlnZ2VyIHRoYW4gYXZlcmFnZSBzZXBhbCB3aWR0aCIsInNvbHV0aW9uIjoiIyBTdG9yZSB0aGUgdmVyc2ljb2xvciBkYXRhIGFzIGFuIG9iamVjdCBjYWxsZWQgYHZlcnNpY29sb3JgXG52ZXJzaWNvbG9yIDwtIGlyaXNbaXJpcyRTcGVjaWVzID09IFwidmVyc2ljb2xvclwiLCBdXG5cbiMgU2VsZWN0IGZvciBhbGwgSXJpcyB2ZXJzaWNvbG9yIHRoYXQgaGF2ZSBiaWdnZXIgdGhhbiBhdmVyYWdlIHNlcGFsIHdpZHRoXG52ZXJzaWNvbG9yW3ZlcnNpY29sb3IkU2VwYWwuV2lkdGggPiBtZWFuKGlyaXMkU2VwYWwuV2lkdGgpLCBdIiwic2N0IjoidGVzdF9vYmplY3QoJ3ZlcnNpY29sb3InLCB1bmRlZmluZWRfbXNnID0gXCJEaWQgeW91IGRlZmluZSB0aGUgYHZlcnNpY29sb3JgIG9iamVjdD9cIiwgXG4gICAgICAgICAgICBpbmNvcnJlY3RfbXNnID0gXCJTZWxlY3Qgd2hlcmUgYFNwZWNpZXNgIGlzIGBcXFwidmVyc2ljb2xvclxcXCJgLlwiKVxudGVzdF9vdXRwdXRfY29udGFpbnMoJ3ZlcnNpY29sb3JbdmVyc2ljb2xvciRTZXBhbC5XaWR0aCA+IG1lYW4oaXJpcyRTZXBhbC5XaWR0aCksIF0sIF0nLFxuICAgICAgICAgICAgICAgICAgICAgaW5jb3JyZWN0X21zZyA9IFwiTm90IHF1aXRlISBUcnkgdXNpbmcgdGhlIGBtZWFuKClgIGZ1bmN0aW9uIHRvIGZpbmQgdGhlIGF2ZXJhZ2Ugc2VwYWwgd2lkdGguXCIpXG5zdWNjZXNzX21zZyhcIkdyZWF0IHdvcmshXCIpIiwiaGludCI6IlVzZSB0aGUgPGNvZGU+bWVhbigpPC9jb2RlPiBmdW5jdGlvbiB0byBmaW5kIHRoZSBhdmVyYWdlIHNlcGFsIHdpZHRoIGluIHRoZSA8Y29kZT5pcmlzPC9jb2RlPiBkYXRhc2V0LCB0aGVuIHVzZSBhIGNvbmRpdGlvbmFsIHN0YXRlbWVudCBwcmVmaXhlZCBieSA8Y29kZT52ZXJzaWNvbG9yPC9jb2RlPiB0byBzZWxlY3Qgb25seSB0aG9zZSB3aXRoIGJpZ2dlci10aGFuLWF2ZXJhZ2UgdmFsdWVzLiJ9
+</div>
+<p><strong>Report the average sepal width for all Iris virginica that have a petal length smaller than 5 centimeters.</strong></p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJzYW1wbGUiOiIjIFlvdSdyZSBmcmVlIHRvIGFwcHJvYWNoIHRoaXMgcHJvYmxlbSBob3dldmVyIHlvdSBsaWtlISIsInNvbHV0aW9uIjoiIyBTdG9yZSB0aGUgdmlyZ2luaWNhIGRhdGEgYXMgYW4gb2JqZWN0IGNhbGxlZCB2aXJnaW5pY2FcbnZpcmdpbmljYSA8LSBpcmlzW2lyaXMkU3BlY2llcyA9PSBcInZpcmdpbmljYVwiLCBdXG5cbiMgQXZlcmFnZSBzZXBhbCB3aWR0aCBmb3IgSXJpcyB2aXJnaW5pY2EgdGhhdCBoYXZlIGEgcGV0YWwgbGVuZ3RoIHNtYWxsZXIgdGhhbiA1XG5tZWFuKHZpcmdpbmljYVt2aXJnaW5pY2EkUGV0YWwuTGVuZ3RoIDwgNSwgXSRTZXBhbC5XaWR0aCkiLCJzY3QiOiJ0ZXN0X291dHB1dF9jb250YWlucygnMi44JyxcbiAgICAgICAgICAgICAgICAgICAgIGluY29ycmVjdF9tc2cgPSBcIkluY29ycmVjdCEgVGhpcyBpcyBhIHRvdWdoIG9uZSFcIilcbnN1Y2Nlc3NfbXNnKFwiRXhjZWxsZW50IVwiKSIsImhpbnQiOiJGaXJzdCwgdHJ5IHN1YnNldHRpbmcgZm9yIGFsbCBJcmlzIHZpcmdpbmljYSB0aGVuIGZvciB3aGVyZSA8Y29kZT5QZXRhbC5MZW5ndGg8L2NvZGU+IGlzIHNtYWxsZXIgdGhhbiA1LiBZb3UgY2FuIGZpbmQgdGhlIGF2ZXJhZ2UgYnkgY2FsbGluZyB0aGUgPGNvZGU+bWVhbigpPC9jb2RlPiBmdW5jdGlvbi4ifQ==
+</div>
+</div>
+<div id="recap" class="section level3">
+<h3>Recap</h3>
+<p>In this tutorial, you:</p>
+<ul>
+<li>Learned about subsetting your data frame by index. Rows and columns are indexed as integers from 1 to the number of rows and columns, respectively.</li>
+<li>Learned about subsetting your data frame by name. You learned that row names are rarely specified and that column names are of character types.</li>
+<li>Learned to use conditional statements in the row element inside square brackets to subset your data frame by value.</li>
+<li>Learned to combine these methods to allow more flexible subsetting (e.g. using conditionals for rows and subsetting by index or name for columns).</li>
+</ul>
+<p>Subsetting is just one way to manipulate your dataset. If you want to learn more about other ways to extract insights, such as grouping, summarizing, and merging, check out <a href="https://www.datacamp.com/courses/tech:r/topic:data_manipulation">these courses</a> on DataCamp!</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

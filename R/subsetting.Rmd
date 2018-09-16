@@ -157,7 +157,7 @@ success_msg("Nice! Turns out this is the case only for Iris setosa.")
 Try using the `iris$Sepal.Width > iris$Petal.Length` conditional in the square brackets!
 ```
 
-**Select all Iris versicolor whose sepal width is larger than average (among all species).**
+**Select all Iris versicolor whose sepal width is larger than the average sepal width among all species.**
 
 ```{r ex="create_e", type="sample-code"}
 # Store the versicolor data as an object called `versicolor`
