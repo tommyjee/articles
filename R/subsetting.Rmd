@@ -18,11 +18,11 @@ tutorial::go_interactive()
 
 Whether you're comparing how different demographics respond to marketing campaigns, zooming in on a specific time period, or pulling information about a select few products of many, subsetting datasets is necessary when you want to take a closer look at your data. R is a great tool that makes subsetting data easy and intuitive. By the end of this tutorial, you'll have the know-how to extract the information you want from your dataset.
 
-Most commonly, data are in rows and columns, so subsetting your data is simply selecting certain rows and/or columns based on some criteria you have in mind. In general, there are three ways to subset the rows and columns of your dataset—by index, by name, and often most usefully, by value.
+Most commonly, data are in rows and columns, so subsetting your data is simply selecting certain rows and/or columns based on some criteria you have in mind. In general, there are three ways to subset the rows and columns of your dataset—by index, by name, and by value.
 
 ### Subsetting rows and columns by index
 
-One way to subset your rows and columns is by your dataset's indices. What does this mean? Well, in English, this is the same as describing your rows and columns as "the first row", "all rows in second and fifth columns", or "the first row in second to fifth columns". Let's see how you can specify such phrases using a dataset called `iris` in R:
+One way to subset your rows and columns is by your dataset's indices. This is the same as describing your rows and columns as "the first row", "all rows in second and fifth columns", or "the first row in second to fifth columns". Let's see how you can specify such phrases using a dataset called `iris` in R. From the documentation, "[t]his famous (Fisher's or Anderson's) iris dataset gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica."
 
 ```{r ex="create_a", type="sample-code"}
 # "The first row":
@@ -35,7 +35,7 @@ iris[, c(2, 5)]
 iris[1, 2:5]
 ```
 
-As you can see, square brackets are used after your dataset object. The rows of your dataset is specified as the first element inside the square brackets and the columns of your dataset is specified as the second, separated by a comma:
+As you can see, square brackets are used after your dataset object. The rows of your dataset are specified as the first element inside the square brackets and the columns of your dataset are specified as the second, separated by a comma:
 
 ```
 data[rows, columns]
@@ -43,7 +43,7 @@ data[rows, columns]
 
 ### Subsetting rows and columns by name
 
-In R, the rows and columns of your dataset have name attributess. Row names are rarely used and by default provide indices—integers numbering from 1 to the number of rows of your dataset—just like what you saw in the previous section. In fact, if you called `rownames()` on the `iris` dataset, you will see that these are just indexed from 1 to 150:
+In R, the rows and columns of your dataset have name attributes. Row names are rarely used and by default provide indices—integers numbering from 1 to the number of rows of your dataset—just like what you saw in the previous section. In fact, if you called `rownames()` on the `iris` dataset, you will see that these are just indexed from 1 to 150:
 
 ```
 > rownames(iris)
@@ -63,7 +63,7 @@ In R, the rows and columns of your dataset have name attributess. Row names are 
 [1] 150
 ```
 
-Row names are more common in smaller datasets that would make each observation in your dataset easily identifiable. For example, a doctor could have a small dataset containing health information of his or her patients, and the row names of this dataset might be the names of the patients.
+Row names are more common in smaller datasets and are used to make observations in your dataset easily identifiable. For example, for a small dataset containing health information of a doctor's patients, the row names of this dataset could be the full names of the patients.
 
 Column names on the other hand, are ubiquitous to almost any dataset. You can access these with the `colnames()` function or the `names()` function:
 
@@ -75,7 +75,7 @@ Column names on the other hand, are ubiquitous to almost any dataset. You can ac
 [1] "Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width"  "Species" 
 ```
 
-To subset your dataset by the names of your rows and columnt, simply use the square brackets again prefixed by your dataset object:
+To subset your dataset by the names of your rows and columns, simply use the square brackets again, prefixed by your dataset object:
 
 ```{r ex="create_b", type="sample-code"}
 # Sepal width of the fifth observation
@@ -85,11 +85,11 @@ iris["5", "Sepal.Width"]
 iris[, c("Sepal.Width", "Petal.Width")]
 ```
 
-It's important to note that both the row and column names are stored as characters, so using single or double quotes are absolutely necessary!
+It's important to note that both the row and column names are stored as characters, so using single or double quotes is absolutely necessary!
 
 ### Subsetting rows and columns by value
 
-Subsetting your rows and columns by value often allows the most flexibility. For example, you can extract the data on the setosa iris using a conditional statement like this:
+Subsetting your rows and columns by value often allows the most flexibility. For example, you can extract the data on Iris setosa using a conditional statement like this:
 
 ```
 > iris[iris$Species == "setosa", ]
@@ -107,7 +107,7 @@ Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 50          5.0         3.3          1.4         0.2  setosa
 ```
 
-Conditional statements like `iris$Species == "setosa"` belong in the row element in the square brackets (i.e. the first element before the comma). In addition to the conditional statement in the first element, you can specify columns by index or name in the second element. In the console below, try selecting just the sepal measurements of the setosa iris:
+Conditional statements like `iris$Species == "setosa"` belong in the row element in the square brackets (i.e. the first element before the comma). In addition to the conditional statement in the first element, you can specify columns by index or name in the second element. In the console below, try selecting just the sepal measurements of Iris setosa:
 
 ```{r ex="create_c", type="sample-code"}
 # Print sepal measurements for setosa
@@ -135,7 +135,7 @@ success_msg("Great work!")
 
 Let's try practicing what you've learned thus far!
 
-**Select the observations for which the sepal width is greater than the petal length.**
+**Select all observations for which the sepal width is greater than the petal length.**
 
 ```{r ex="create_d", type="sample-code"}
 # Which observations have greater sepal length than petal length?
@@ -150,44 +150,44 @@ iris[iris$Sepal.Width > iris$Petal.Length, ]
 ```{r ex="create_d", type="sct"}
 test_output_contains('iris[iris$Sepal.Width > iris$Petal.Length, ]',
                      incorrect_msg = "Not quite! Select the observations for which values for `Sepal.Width` is larger than those for `Petal.Length`.")
-success_msg("Nice! Turns out this is the case only for the setosa iris.")
+success_msg("Nice! Turns out this is the case only for Iris setosa.")
 ```
 
 ```{r ex="create_d", type="hint"}
 Try using the `iris$Sepal.Width > iris$Petal.Length` conditional in the square brackets!
 ```
 
-**Select the flowers that have bigger than average sepal width for the versicolor iris.**
+**Select all Iris versicolor whose sepal width is larger than average (among all species).**
 
 ```{r ex="create_e", type="sample-code"}
-# Store the versicolor data as an object called versicolor
+# Store the versicolor data as an object called `versicolor`
 
 
-# Select the versicolor iris that have bigger than average sepal width
+# Select for all Iris versicolor that have bigger than average sepal width
 
 ```
 
 ```{r ex="create_e", type="solution"}
-# Store the versicolor data as an object called versicolor
+# Store the versicolor data as an object called `versicolor`
 versicolor <- iris[iris$Species == "versicolor", ]
 
-# Select the versicolor iris that have bigger than average sepal width
-versicolor[versicolor$Sepal.Width > mean(versicolor$Sepal.Width), ]
+# Select for all Iris versicolor that have bigger than average sepal width
+versicolor[versicolor$Sepal.Width > mean(iris$Sepal.Width), ]
 ```
 
 ```{r ex="create_e", type="sct"}
-test_object('versi', undefined_msg = "Did you define the `versicolor` object?", 
+test_object('versicolor', undefined_msg = "Did you define the `versicolor` object?", 
             incorrect_msg = "Select where `Species` is `\"versicolor\"`.")
-test_output_contains('versicolor[versicolor$Sepal.Width > mean(versicolor$Sepal.Width), ], ]',
+test_output_contains('versicolor[versicolor$Sepal.Width > mean(iris$Sepal.Width), ], ]',
                      incorrect_msg = "Not quite! Try using the `mean()` function to find the average sepal width.")
 success_msg("Great work!")
 ```
 
 ```{r ex="create_e", type="hint"}
-Use the `mean()` function to find the average sepal width, then use a conditional to select only those with bigger values.
+Use the `mean()` function to find the average sepal width in the `iris` dataset, then use a conditional statement prefixed by `versicolor` to select only those with bigger-than-average values.
 ```
 
-**Report the average sepal width for virginica irises that have a petal length smaller than 5 centimeters.**
+**Report the average sepal width for all Iris virginica that have a petal length smaller than 5 centimeters.**
 
 ```{r ex="create_f", type="sample-code"}
 # You're free to approach this problem however you like!
@@ -198,7 +198,7 @@ Use the `mean()` function to find the average sepal width, then use a conditiona
 # Store the virginica data as an object called virginica
 virginica <- iris[iris$Species == "virginica", ]
 
-# Average sepal width for virginica irises that have a petal length smaller than 5
+# Average sepal width for Iris virginica that have a petal length smaller than 5
 mean(virginica[virginica$Petal.Length < 5, ]$Sepal.Width)
 ```
 
@@ -209,7 +209,7 @@ success_msg("Excellent!")
 ```
 
 ```{r ex="create_f", type="hint"}
-First try subsetting for all virginica irises then for where `Petal.Length` is smaller than 5. You can find the average by calling the `mean()` function.
+First, try subsetting for all Iris virginica then for where `Petal.Length` is smaller than 5. You can find the average by calling the `mean()` function.
 ```
 
 ### Recap
