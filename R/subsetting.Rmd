@@ -16,13 +16,13 @@ tutorial::go_interactive()
 
 ### Subsetting datasets is a crucial skill for any data professional. Learn and practice subsetting data in this quick interactive tutorial!
 
-Whether you're comparing how different demographics respond to marketing campaigns, zooming in on a specific time period, or pulling information about a select few products of many, subsetting datasets is necessary when you want to take a closer look at your data. R is a great tool that makes subsetting data easy and intuitive. By the end of this tutorial, you'll have the know-how to extract the information you want from your dataset.
+Whether you're comparing how different demographics respond to marketing campaigns, zooming in on a specific time frame, or pulling information about a select few products from the inventory, subsetting datasets enables you to extract useful observations in your dataset. R is a great tool that makes subsetting data easy and intuitive. By the end of this tutorial, you'll have the know-how to extract the information you want from your dataset.
 
-Most commonly, data are in rows and columns, so subsetting your data is simply selecting certain rows and/or columns based on some criteria you have in mind. In general, there are three ways to subset the rows and columns of your dataset—by index, by name, and by value.
+Subsetting your data does not change the content of your data, but simply selects the portion most relevant to the goal you have in mind. In general, there are three ways to subset the rows and columns of your dataset—by index, by name, and by value.
 
 ### Subsetting rows and columns by index
 
-One way to subset your rows and columns is by your dataset's indices. This is the same as describing your rows and columns as "the first row", "all rows in second and fifth columns", or "the first row in second to fifth columns". Let's see how you can specify such phrases using a dataset called `iris` in R. From the documentation, "[t]his famous (Fisher's or Anderson's) iris dataset gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica."
+One way to subset your rows and columns is by your dataset's indices. This is the same as describing your rows and columns as "the first row", "all rows in second and fifth columns", or "the first row in second to fifth columns". Let's specify such phrases using a dataset called `iris` in R. From its [documentation](https://www.rdocumentation.org/packages/datasets/versions/3.5.1/topics/iris), "[t]his famous (Fisher's or Anderson's) iris dataset gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are *Iris setosa, versicolor*, and *virginica*."
 
 ```{r ex="create_a", type="sample-code"}
 # "The first row":
@@ -35,7 +35,7 @@ iris[, c(2, 5)]
 iris[1, 2:5]
 ```
 
-As you can see, square brackets are used after your dataset object. The rows of your dataset are specified as the first element inside the square brackets and the columns of your dataset are specified as the second, separated by a comma:
+To subset your data, square brackets are used after your dataset object. The rows of your dataset are specified as the first element inside the square brackets and the columns of your dataset are specified as the second, separated by a comma:
 
 ```
 data[rows, columns]
@@ -85,11 +85,11 @@ iris["5", "Sepal.Width"]
 iris[, c("Sepal.Width", "Petal.Width")]
 ```
 
-It's important to note that both the row and column names are stored as characters, so using single or double quotes is absolutely necessary!
+It's important to note that both the row and column names are **characters**, so using single or double quotes is absolutely necessary!
 
 ### Subsetting rows and columns by value
 
-Subsetting your rows and columns by value often allows the most flexibility. For example, you can extract the data on Iris setosa using a conditional statement like this:
+Subsetting your rows and columns by value often allows the most flexibility. For example, you can extract the data on *Iris setosa* using a conditional statement like this:
 
 ```
 > iris[iris$Species == "setosa", ]
@@ -107,7 +107,7 @@ Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 50          5.0         3.3          1.4         0.2  setosa
 ```
 
-Conditional statements like `iris$Species == "setosa"` belong in the row element in the square brackets (i.e. the first element before the comma). In addition to the conditional statement in the first element, you can specify columns by index or name in the second element. In the console below, try selecting just the sepal measurements of Iris setosa:
+Conditional statements like `iris$Species == "setosa"` belong in the row element in the square brackets (i.e. the first element before the comma). In addition to the conditional statement in the first element, you can specify columns by index or name in the second element. In the console below, try selecting just the sepal measurements of *Iris setosa*:
 
 ```{r ex="create_c", type="sample-code"}
 # Print sepal measurements for setosa
@@ -131,9 +131,18 @@ test_or(
 success_msg("Great work!")
 ```
 
-### Practice exercises
+### Recap
 
-Let's try practicing what you've learned thus far!
+In this tutorial, you:
+
+- Learned about subsetting your data frame by index. Rows and columns are indexed as integers from 1 to the number of rows and columns, respectively.
+- Learned about subsetting your data frame by name. You learned that row names are rarely specified and that column names are of character types.
+- Learned to use conditional statements in the row element inside square brackets to subset your data frame by value.
+- Learned to combine these methods to allow more flexible subsetting (e.g. using conditionals for rows and subsetting by index or name for columns).
+
+Below are some exercises to help reinforce what you've learned. Practice makes perfect, so give these a try!
+
+### Practice exercises
 
 **Select all observations for which the sepal width is greater than the petal length.**
 
@@ -149,15 +158,16 @@ iris[iris$Sepal.Width > iris$Petal.Length, ]
 
 ```{r ex="create_d", type="sct"}
 test_output_contains('iris[iris$Sepal.Width > iris$Petal.Length, ]',
-                     incorrect_msg = "Not quite! Select the observations for which values for `Sepal.Width` is larger than those for `Petal.Length`.")
-success_msg("Nice! Turns out this is the case only for Iris setosa.")
+                     incorrect_msg = paste("Select the observations for which `Sepal.Width` values",
+                                           "are larger than `Petal.Length` values."))
+success_msg("Nice! Turns out only _Iris setosa_ have this shape.")
 ```
 
 ```{r ex="create_d", type="hint"}
-Try using the `iris$Sepal.Width > iris$Petal.Length` conditional in the square brackets!
+Use `iris$Sepal.Width > iris$Petal.Length` inside the square brackets. Don't forget the comma!
 ```
 
-**Select all Iris versicolor whose sepal width is larger than the average sepal width among all species.**
+**Select all _Iris versicolor_ whose sepal width is larger than the average sepal width among all species.**
 
 ```{r ex="create_e", type="sample-code"}
 # Store the versicolor data as an object called `versicolor`
@@ -176,18 +186,22 @@ versicolor[versicolor$Sepal.Width > mean(iris$Sepal.Width), ]
 ```
 
 ```{r ex="create_e", type="sct"}
-test_object('versicolor', undefined_msg = "Did you define the `versicolor` object?", 
-            incorrect_msg = "Select where `Species` is `\"versicolor\"`.")
+test_object('versicolor',
+            undefined_msg = "Did you define the `versicolor` object?", 
+            incorrect_msg = paste("Select where `Species` is equal to `\"versicolor\"`.",
+                                  "Remember to use the `==` operator!"))
 test_output_contains('versicolor[versicolor$Sepal.Width > mean(iris$Sepal.Width), ], ]',
-                     incorrect_msg = "Not quite! Try using the `mean()` function to find the average sepal width.")
+                     incorrect_msg = paste("Not quite! Are you using the `mean()` function",
+                                           "to find the average sepal width across all species",
+                                           "and not just for _Iris versicolor_?"))
 success_msg("Great work!")
 ```
 
 ```{r ex="create_e", type="hint"}
-Use the `mean()` function to find the average sepal width in the `iris` dataset, then use a conditional statement prefixed by `versicolor` to select only those with bigger-than-average values.
+Use the `mean()` function to find the average sepal width in `iris`, then use a conditional statement prefixed by `versicolor` to select only those with bigger-than-average values.
 ```
 
-**Report the average sepal width for all Iris virginica that have a petal length smaller than 5 centimeters.**
+**Report the average sepal width for all _Iris virginica_ that have petal lengths smaller than 5 centimeters.**
 
 ```{r ex="create_f", type="sample-code"}
 # You're free to approach this problem however you like!
@@ -198,7 +212,7 @@ Use the `mean()` function to find the average sepal width in the `iris` dataset,
 # Store the virginica data as an object called virginica
 virginica <- iris[iris$Species == "virginica", ]
 
-# Average sepal width for Iris virginica that have a petal length smaller than 5
+# Average sepal width for Iris virginica that have petal lengths smaller than 5
 mean(virginica[virginica$Petal.Length < 5, ]$Sepal.Width)
 ```
 
@@ -209,16 +223,7 @@ success_msg("Excellent!")
 ```
 
 ```{r ex="create_f", type="hint"}
-First, try subsetting for all Iris virginica then for where `Petal.Length` is smaller than 5. You can find the average by calling the `mean()` function.
+First, try subsetting for all _Iris virginica_ then for where `Petal.Length` is smaller than 5. You can find the average by calling the `mean()` function.
 ```
 
-### Recap
-
-In this tutorial, you:
-
-- Learned about subsetting your data frame by index. Rows and columns are indexed as integers from 1 to the number of rows and columns, respectively.
-- Learned about subsetting your data frame by name. You learned that row names are rarely specified and that column names are of character types.
-- Learned to use conditional statements in the row element inside square brackets to subset your data frame by value.
-- Learned to combine these methods to allow more flexible subsetting (e.g. using conditionals for rows and subsetting by index or name for columns).
-
-Subsetting is just one way to manipulate your dataset. If you want to learn more about other ways to extract insights, such as grouping, summarizing, and merging, check out [these courses](https://www.datacamp.com/courses/tech:r/topic:data_manipulation) on DataCamp!
+Want to learn more about other ways to extract insights from your data? Check out [these courses](https://www.datacamp.com/courses/tech:r/topic:data_manipulation) on DataCamp!
