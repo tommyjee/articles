@@ -1,0 +1,126 @@
+---
+title: "Merging Datasets in R Tutorial"
+author: "Tom Jeon"
+date: "Sept 29, 2018"
+output:
+  html_document:
+    self_contained: false
+---
+
+```{r, include=FALSE}
+tutorial::go_interactive()
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Merging Datasets in R Tutorial
+
+### In this tutorial, you'll learn to join multiple data sets in R using the tidyverse framework.
+
+In the applied setting, data are hosted on different servers and exist as separate files. When the data you need come as separate data sets, it's essential to know how to join multiple files in a sensible way without losing valuable information.
+
+This tutorial will walk you through:
+
+- Adding data sets horizontally and vertically
+- What keys are and why they're important when merging data sets
+- Choosing a join logic (e.g. left-join, inner-join)
+- Common problem to watch out for and how to solve it
+
+Along the way, you'll discover the best practices for building data sets and troubleshooting joins with `dplyr` and `tibble`.
+
+## Concatenating data sets
+
+At the high level, there are two ways you can merge data sets together; you can either concatenate more rows or concatenate more columnns to an existing data set by taking information from another data set. In general, when you have data sets that have the same set of columns or have the same set of observations, you can concatenate them vertically or horizontally, respectively.
+
+### Adding data sets vertically
+
+When you have multiple data sets that have the same set of columns, you can concatenate one data set to another vertically. That is, keeping the columns of your data set, you can add more rows to it. Having such information in one file will make it easier for you to see the bigger picture without the hassle of switching back and forth between multiple files.
+
+Dataset1
+```
+
+```
+
+Dataset2
+```
+
+```
+
+
+### Adding data sets horizontally
+
+When you have data sets representing the same set of observations, you can concatentate such data sets horizontally. That is, keeping the rows of your data set, you can add more columns to it. In such cases, the first thing you should do is see if these files have the same number of observations and that the order of the observations are the same.
+
+Let's extend the example you saw above. Suppose you have two data files, one containing people's names and gender, and another containing people's names and shirt sizes.
+
+Combined Dataset1, Dataset2
+```
+
+```
+
+Dataset3
+```
+
+```
+
+Good work! But what if we had information on some of the observations in one data set and wanted to add information about those for which you have more information on?
+
+## Primary key and foreign keys
+
+The first step when looking to combine data sets is to look for the *primary key* of your data set. The primary key is the column or set of columns that uniquely identifies each observation in your data set.
+
+
+## Types of joins
+
+Left, right joins
+
+Inner joins
+
+Full joins
+
+And there are more! You can augment columns from one data set with columns from another with mutating joins, filter one data set against another with filtering joins, and sift through data sets with set operations. You can get hands-on practice implementing the best ways to combine data sets into single tables in the [Joining Data in R](https://www.datacamp.com/courses/joining-data-in-r-with-dplyr) course. Afterwards, you’ll be well on your way to data manipulation mastery!
+
+## Missing keys
+Suppose we have two datasets. The first dataset is called `shirt` and contains the names of people and their shirt size:
+
+```
+> shirt
+  name size
+1  Tom    M
+2  Dan   XL
+3 Keil    S
+```
+
+The second data set is called `noNames` and contains the people's surnnames, color preferences, but stores some information in the `row.names` attribute:
+
+```
+> noNames
+     surname color
+Tom     Jeon  <NA>
+Dan    Smith  Dark
+Bob McLadden Light
+```
+
+Notice what could go wrong here? Two-table joins can get complicated when there are missing keys or duplicate keys. In this example, R's data frames store important information in the `row.names` attribute. When this is the case, you won't be able to access the key with a join function, as join functions can only access columns of the data frame.
+
+The trick to easily fix this problem is to use `rownames_to_column()` from the `tibble` package. It returns a copy of your data set with the row names added to the data as a column. The first argument to `rownames_to_column()` is your data frame object and the second argument is a string specifying the name of the column you want to add.
+
+Try exploring in the console below. Data sets `noNames` and `plays` are pre-loaded on your workspace.
+
+```{r ex="create_c", type="pre-exercise-code"}
+noNames <- data.frame(surname = c("Jeon", "Smith", "McLadden"), color = c(NA, "Dark", "Light"))
+row.names(noNames) <- c("Tom", "Dan", "Bob")
+shirt <- data.frame(name = c("Tom", "Dan", "Keil"), size = c("M", "XL", "S"))
+```
+
+```{r ex="create_c", type="sample-code"}
+# Explore here!
+
+```
+
+## Final thoughts
+
+In the real world, data comes split across many data sets, but R is designed to work with single tables of data. Manipulating and combining data sets are essential skills for any analyst. Try the first chapters of [Data Manipulation in R with dplyr](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial/) and  [Joining Data in R with dplyr](https://www.datacamp.com/courses/joining-data-in-r-with-dplyr) for free! You'll learn lots from our expert instructor, Garrett Grolemund, the author of *Hands-On Programming with R* and *R for Data Science from O'Reilly Media*, and Master Instructor at RStudio. Happy learning!
