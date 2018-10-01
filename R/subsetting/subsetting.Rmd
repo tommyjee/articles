@@ -147,7 +147,7 @@ Below are some exercises to help reinforce what you've learned. Practice makes p
 **Select all observations for which the sepal width is greater than the petal length.**
 
 ```{r ex="create_d", type="sample-code"}
-# Which observations have greater sepal length than petal length?
+# Which observations have greater sepal width than petal length?
 
 ```
 
@@ -170,7 +170,7 @@ Use `iris$Sepal.Width > iris$Petal.Length` inside the square brackets. Don't for
 **Select all _Iris versicolor_ whose sepal width is larger than the average sepal width among all species.**
 
 ```{r ex="create_e", type="sample-code"}
-# Store the versicolor data as an object called `versicolor`
+# Store the versicolor data as an object called versicolor
 
 
 # Select for all Iris versicolor that have bigger than average sepal width
@@ -178,7 +178,7 @@ Use `iris$Sepal.Width > iris$Petal.Length` inside the square brackets. Don't for
 ```
 
 ```{r ex="create_e", type="solution"}
-# Store the versicolor data as an object called `versicolor`
+# Store the versicolor data as an object called versicolor
 versicolor <- iris[iris$Species == "versicolor", ]
 
 # Select for all Iris versicolor that have bigger than average sepal width
@@ -190,7 +190,7 @@ test_object('versicolor',
             undefined_msg = "Did you define the `versicolor` object?", 
             incorrect_msg = paste("Select where `Species` is equal to `\"versicolor\"`.",
                                   "Remember to use the `==` operator!"))
-test_output_contains('versicolor[versicolor$Sepal.Width > mean(iris$Sepal.Width), ], ]',
+test_output_contains('versicolor[versicolor$Sepal.Width > mean(iris$Sepal.Width), ]',
                      incorrect_msg = paste("Not quite! Are you using the `mean()` function",
                                            "to find the average sepal width across all species",
                                            "and not just for _Iris versicolor_?"))
