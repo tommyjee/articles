@@ -5,6 +5,8 @@ date: "Sept 29, 2018"
 output:
   html_document:
     self_contained: false
+header-includes:
+- \usepackage{booktabs}
 ---
 
 ```{r, include=FALSE}
@@ -18,18 +20,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Merging Datasets in R Tutorial
 
-### In this tutorial, you'll learn to join multiple data sets in R using the tidyverse framework.
+### In this tutorial, you'll learn to join multiple data sets in R!
 
-In the applied setting, data are hosted on different servers and exist as separate files. When the data you need come as separate data sets, it's essential to know how to join multiple files in a sensible way without losing valuable information.
+In the applied setting, data are hosted on different servers and exist in many different files. When the data you need come from multiple sources, it's essential to know how to aggregate them so that you lose as little information as possible and make pairings that actually make sense given the structure of your data.
 
 This tutorial will walk you through:
 
-- Adding data sets horizontally and vertically
-- What keys are and why they're important when merging data sets
-- Choosing a join logic (e.g. left-join, inner-join)
-- Common problem to watch out for and how to solve it
+- Merging data sets horizontally and vertically
+- What keys are and how they add structure to your data
+- Different types of joins (e.g. left-join, inner-join, full-join) and how to choose among them
+- Common problems to watch out for and how to resolve them
 
-Along the way, you'll discover the best practices for building data sets and troubleshooting joins with `dplyr` and `tibble`.
+When you're done, be sure to check out the [Joining Data in R with dplyr](https://www.datacamp.com/courses/joining-data-in-r-with-dplyr) course taught by Garrett Grolemund of RStudio. The first chapter is free. Garrett's course will go much more in-depth than this tutorial, covering advanced techniques to augment columns from one data set with columns from another with mutating joins, how to filter one data set against another with filtering joins, and how to sift through data sets with set operations. Along the way, you'll discover the best practices for building data sets and troubleshooting joins with `dplyr`.
 
 ## Concatenating data sets
 
@@ -37,7 +39,7 @@ At the high level, there are two ways you can merge data sets together; you can 
 
 ### Adding data sets vertically
 
-When you have multiple data sets that have the same set of columns, you can concatenate one data set to another vertically. That is, keeping the columns of your data set, you can add more rows to it. Having such information in one file will make it easier for you to see the bigger picture without the hassle of switching back and forth between multiple files.
+When you have multiple data sets that have the same set of columns, you can concatenate one data set to another vertically. That is, _keeping the columns_ of your data set, you can _add more rows_ to it. Having such information in one file will make it easier for you to aggregate and see the bigger picture without the hassle of switching back and forth between multiple files and tracking them.
 
 Dataset1
 ```
@@ -49,12 +51,40 @@ Dataset2
 
 ```
 
+It's important to note that if you have the same observation across multiple data sets and you concatenate them vertically using `rbind()`, you'll end up with duplicate observations in your table. And though the two data sets must have the same set of variables (i.e. columns), they don't have to be in the same order.
 
 ### Adding data sets horizontally
 
-When you have data sets representing the same set of observations, you can concatentate such data sets horizontally. That is, keeping the rows of your data set, you can add more columns to it. In such cases, the first thing you should do is see if these files have the same number of observations and that the order of the observations are the same.
+When you have data sets representing the same set of observations, you can concatentate such data sets horizontally. This time, _keeping the rows_ of your data set, you can _add more columns_ to it. In such cases, you should check that the order of the observations are the same. If your data sets have different number of rows, or they have the same number of rows but the rows are ordered inconsistently, you can pair one set of columns with the other set in a way that doesn't make sense. For example, consider the following:
 
-Let's extend the example you saw above. Suppose you have two data files, one containing people's names and gender, and another containing people's names and shirt sizes.
+```{r, echo=FALSE, results='asis'}
+library(knitr)
+library(xtable)
+models <- kable(data.frame(make = c("Honda", "BMW", "Ford", "Tesla"),
+                           models = c(63, 10, 26, 4)),
+                format = "latex",
+                booktabs = TRUE)
+sales <- kable(data.frame(make = c("Ford", "BMW", "Honda", "Tesla"),
+                          sales = c(119157, 25908, 188328, 29975)),
+               format = "latex",
+               booktabs = TRUE)
+
+cat(c("\\begin{table}[!htb]
+    \\begin{minipage}{.5\\linewidth}
+      \\caption{}
+      \\centering",
+    models,
+    "\\end{minipage}%
+    \\begin{minipage}{.5\\linewidth}
+      \\centering
+        \\caption{}",
+    sales,
+    "\\end{minipage} 
+\\end{table}"
+))  
+```
+
+Let's extend the example you saw above. Suppose you have two data files, one containing name and gender, and another containing names and shirt sizes.
 
 Combined Dataset1, Dataset2
 ```
@@ -66,7 +96,7 @@ Dataset3
 
 ```
 
-Good work! But what if we had information on some of the observations in one data set and wanted to add information about those for which you have more information on?
+Good work! But what if you had information only on some of the rows in one data set and wanted to add information only for those you have more information on? Put another way, what if you wanted to add more columns from one data set to another but these data sets don't have the same number of observations?
 
 ## Primary key and foreign keys
 
@@ -75,20 +105,23 @@ The first step when looking to combine data sets is to look for the *primary key
 
 ## Types of joins
 
-Left, right joins
+There are Let `dat1` be the first data set and `dat2` the data set you're trying to join with `dat1`.
 
-Inner joins
+**Left joins**: return all rows from x, and all columns from x and y. Rows in x with no match in y will have NA values in the new columns. If there are multiple matches between x and y, all combinations of the matches are returned.
 
-Full joins
+**Inner joins**: return all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
 
-And there are more! You can augment columns from one data set with columns from another with mutating joins, filter one data set against another with filtering joins, and sift through data sets with set operations. You can get hands-on practice implementing the best ways to combine data sets into single tables in the [Joining Data in R](https://www.datacamp.com/courses/joining-data-in-r-with-dplyr) course. Afterwards, you’ll be well on your way to data manipulation mastery!
+**Full joins**: return all rows and all columns from both x and y. Where there are not matching values, returns NA for the one missing.
+
+
+The joins mentioned above are examples of mutating joins since they combine variables from two data sets. Rows of the first data set that are not contained in the other are automatically dropped  are more! You can augment columns from one data set with columns from another with mutating joins, filter one data set against another with filtering joins, and sift through data sets with set operations. You can get hands-on practice implementing the best ways to combine data sets into single tables in the [Joining Data in R](https://www.datacamp.com/courses/joining-data-in-r-with-dplyr) course. Afterwards, you’ll be well on your way to data manipulation mastery!
 
 ## Missing keys
 Suppose we have two datasets. The first dataset is called `shirt` and contains the names of people and their shirt size:
 
 ```
 > shirt
-  name size
+name size
 1  Tom    M
 2  Dan   XL
 3 Keil    S
@@ -98,7 +131,7 @@ The second data set is called `noNames` and contains the people's surnnames, col
 
 ```
 > noNames
-     surname color
+surname color
 Tom     Jeon  <NA>
 Dan    Smith  Dark
 Bob McLadden Light
@@ -123,4 +156,4 @@ shirt <- data.frame(name = c("Tom", "Dan", "Keil"), size = c("M", "XL", "S"))
 
 ## Final thoughts
 
-In the real world, data comes split across many data sets, but R is designed to work with single tables of data. Manipulating and combining data sets are essential skills for any analyst. Try the first chapters of [Data Manipulation in R with dplyr](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial/) and  [Joining Data in R with dplyr](https://www.datacamp.com/courses/joining-data-in-r-with-dplyr) for free! You'll learn lots from our expert instructor, Garrett Grolemund, the author of *Hands-On Programming with R* and *R for Data Science from O'Reilly Media*, and Master Instructor at RStudio. Happy learning!
+In the real world, data comes split across many data sets, but R is designed to work with single tables of data. Manipulating and combining data sets are essential skills. You can try the first chapters of [Data Manipulation in R with dplyr](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial/) and  [Joining Data in R with dplyr](https://www.datacamp.com/courses/joining-data-in-r-with-dplyr) for free.
