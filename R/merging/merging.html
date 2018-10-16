@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Tom Jeon" />
+
+
+<title>Merging Datasets in R Tutorial</title>
+
+<script src="merging_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="merging_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="merging_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="merging_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="merging_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="merging_files/navigation-1.1/tabsets.js"></script>
+<link href="merging_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="merging_files/highlightjs-1.1/highlight.js"></script>
+<script src="merging_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Merging Datasets in R Tutorial</h1>
+<h4 class="author"><em>Tom Jeon</em></h4>
+<h4 class="date"><em>Sept 29, 2018</em></h4>
+
+</div>
+
+
+<script src="https://cdn.datacamp.com/datacamp-light-latest.min.js"></script>
+<div id="merging-datasets-in-r-tutorial" class="section level2">
+<h2>Merging Datasets in R Tutorial</h2>
+<div id="in-this-tutorial-youll-learn-to-join-multiple-datasets-in-r" class="section level3">
+<h3>In this tutorial, you’ll learn to join multiple datasets in R!</h3>
+<p>In the applied setting, data are hosted on different servers and exist in many different files. When the data you need come from multiple sources, it’s essential to know how to aggregate them so that you lose as little information as possible and make pairings that actually make sense given the structure of your data.</p>
+<p>This tutorial will walk you through:</p>
+<ul>
+<li>Merging datasets horizontally and vertically</li>
+<li>What primary keys are and how they add structure to your data</li>
+<li>Different types of joins (e.g. left-join, inner-join, full-join) and how to choose among them</li>
+<li>A common problem to watch out for and how to resolve it</li>
+</ul>
+</div>
+</div>
+<div id="concatenating-datasets" class="section level2">
+<h2>Concatenating datasets</h2>
+<p>At the high level, there are two ways you can merge datasets together; you can add information by adding more rows or by adding more columns to your dataset. In general, when you have datasets that have the same set of columns or have the same set of observations, you can concatenate them vertically or horizontally, respectively. Let’s learn by seeing some examples.</p>
+<div id="adding-datasets-vertically" class="section level3">
+<h3>Adding datasets vertically</h3>
+<p>When you have multiple datasets that have the same set of columns, you can concatenate one dataset to another, vertically. That is, <em>keeping the columns</em> of your dataset, you can <em>add more rows</em> to it. Having such information in one file will make it easier for you to aggregate and see the bigger picture without the hassle of switching back and forth between multiple files and losing track of them.</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Dataset 1
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+make
+</th>
+<th style="text-align:right;">
+num_models
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Honda
+</td>
+<td style="text-align:right;">
+63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMW
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Dataset 2
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+make
+</th>
+<th style="text-align:right;">
+num_models
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Ford
+</td>
+<td style="text-align:right;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tesla
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+</tbody>
+</table>
+<p>It’s important to note that if you have the same observation across multiple datasets and you concatenate them vertically using <code>rbind()</code>, you’ll end up with duplicate observations in your table. And though the two datasets must have the same set of variables (i.e. columns), they don’t have to be in the same order. See for yourself in the console below!</p>
+<p>In your workspace, there are two datasets called <code>dataset1</code> and <code>dataset2</code> you saw above. Try reordering the columns of <code>dataset1</code>. Call <code>rbind()</code> on <code>dataset1</code> and <code>dataset2</code> as well as <code>reordered_dataset1</code> and <code>dataset2</code>.</p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJwcmVfZXhlcmNpc2VfY29kZSI6ImRhdGFzZXQxIDwtIGRhdGEuZnJhbWUobWFrZSA9IGMoXCJIb25kYVwiLCBcIkJNV1wiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgIG51bV9tb2RlbHMgPSBjKDYzLCAxMCkpXG5kYXRhc2V0MiA8LSBkYXRhLmZyYW1lKG1ha2UgPSBjKFwiRm9yZFwiLCBcIlRlc2xhXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBudW1fbW9kZWxzID0gYygyNiwgNCkpIiwic2FtcGxlIjoiIyBBZGQgZGF0YXNldHMgdmVydGljYWxseVxucmJpbmQoZGF0YXNldDEsIGRhdGFzZXQyKVxuXG4jIFJlb3JkZXIgY29sdW1uc1xucmVvcmRlcmVkX2RhdGFzZXQxIDwtIGRhdGFzZXQxWywgYygyLCAxKV1cblxuIyBTZWUgdGhhdCByYmluZCgpIGlzIHJvYnVzdCB0byBjb2x1bW4gb3JkZXJpbmdcbnJiaW5kKHJlb3JkZXJlZF9kYXRhc2V0MSwgZGF0YXNldDIpIn0=
+</div>
+<p>After <code>rbind()</code>, your results should have information on all four car makes in one table like this:</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Vertically concatenated dataset
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+make
+</th>
+<th style="text-align:right;">
+num_models
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Honda
+</td>
+<td style="text-align:right;">
+63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMW
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ford
+</td>
+<td style="text-align:right;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tesla
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="adding-datasets-horizontally" class="section level3">
+<h3>Adding datasets horizontally</h3>
+<p>When you have datasets representing the same set of observations, you can concatentate such datasets horizontally. This time, <em>keeping the rows</em> of your dataset, you can <em>add more columns</em> to it. In such cases, you should check that the order of the observations are the same. If your datasets have different number of rows, or they have the same number of rows but the rows are ordered inconsistently, you can pair one set of columns with the other set in a way that doesn’t make sense.</p>
+<p>Let’s extend the example above for an example. Suppose you have two data files, one containing the car make and number of unique models offered, and another containing the car make and total sales:</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Number of unique models offered
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+make
+</th>
+<th style="text-align:right;">
+num_models
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Honda
+</td>
+<td style="text-align:right;">
+63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMW
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ford
+</td>
+<td style="text-align:right;">
+26
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tesla
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Total sales
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+make
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Ford
+</td>
+<td style="text-align:right;">
+119157
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMW
+</td>
+<td style="text-align:right;">
+25908
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Honda
+</td>
+<td style="text-align:right;">
+188328
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tesla
+</td>
+<td style="text-align:right;">
+29975
+</td>
+</tr>
+</tbody>
+</table>
+<p>It’s important to note that if you have the same observation across multiple datasets and you concatenate them horizontally using <code>cbind()</code>, you’ll end up with redundant columns in your table. And though the two datasets contain related information, ordering of rows matter!</p>
+<p>In the console below, call <code>cbind()</code> on <code>models</code> and <code>sales</code> and print out the result:</p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJwcmVfZXhlcmNpc2VfY29kZSI6Im1vZGVscyA8LSBkYXRhLmZyYW1lKG1ha2UgPSBjKFwiSG9uZGFcIiwgXCJCTVdcIiwgXCJGb3JkXCIsIFwiVGVzbGFcIiksXG4gICAgICAgICAgICAgICAgICAgICBudW1fbW9kZWxzID0gYyg2MywgMTAsIDI2LCA0KSlcbnNhbGVzIDwtIGRhdGEuZnJhbWUobWFrZSA9IGMoXCJGb3JkXCIsIFwiQk1XXCIsIFwiSG9uZGFcIiwgXCJUZXNsYVwiKSxcbiAgICAgICAgICAgICAgICAgICAgc2FsZXMgPSBjKDExOTE1NywgMjU5MDgsIDE4ODMyOCwgMjk5NzUpKSIsInNhbXBsZSI6IiMgQWRkIGRhdGFzZXRzIGhvcml6b250YWxseVxuY2JpbmQobW9kZWxzLCBzYWxlcykifQ==
+</div>
+<p>You should have gotten something like this:</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+make
+</th>
+<th style="text-align:right;">
+num_models
+</th>
+<th style="text-align:left;">
+make
+</th>
+<th style="text-align:right;">
+sales
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Honda
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:left;">
+Ford
+</td>
+<td style="text-align:right;">
+119157
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMW
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+BMW
+</td>
+<td style="text-align:right;">
+25908
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ford
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:left;">
+Honda
+</td>
+<td style="text-align:right;">
+188328
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tesla
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+Tesla
+</td>
+<td style="text-align:right;">
+29975
+</td>
+</tr>
+</tbody>
+</table>
+<p>Do you see the problem here? This data is not tidy!</p>
+<p>According to the principles of tidy data taught in <a href="https://www.datacamp.com/courses/cleaning-data-in-r">this foundational course</a>, each observation of a dataset should be represented in a unique row. And what if you had information only on some of the rows in one dataset and wanted to add information only for those you have more information on? Put another way, what if you wanted to add more columns from one dataset to another but these datasets don’t have the same number of observations?</p>
+</div>
+</div>
+<div id="primary-key-and-foreign-keys" class="section level2">
+<h2>Primary key and foreign keys</h2>
+<p>The first step when looking to combine datasets is to look for the <em>primary key</em> of your dataset. The primary key is the column or set of columns that uniquely identifies each observation in your dataset. In the example with car makes, number of unique models offered, and total sales, the primary key of your datasets is the <code>make</code> column.</p>
+<p>Now, we can perform <em>joins</em>, the standard way to merge datasets into a single table.</p>
+</div>
+<div id="types-of-joins" class="section level2">
+<h2>Types of joins</h2>
+<p>There are many types of joins. You can learn how to augment columns from one dataset with columns from another with mutating joins, how to filter one dataset against another with filtering joins, and how to sift through datasets with set operations in the <a href="https://www.datacamp.com/courses/joining-data-in-r-with-dplyr">Joining Data in R with dplyr</a> course. Below are some of the most common.</p>
+<p><code>left_join(x, y)</code>: returns all rows from <code>x</code>, and all columns from <code>x</code> and <code>y</code>. Rows in <code>x</code> with no match in <code>y</code> will have <code>NA</code> values in the new columns. If there are multiple matches between <code>x</code> and <code>y</code>, all combinations of the matches are returned.</p>
+<p><code>inner_join(x, y)</code>: returns all rows from <code>x</code> where there are matching values in <code>y</code>, and all columns from <code>x</code> and <code>y</code>. If there are multiple matches between <code>x</code> and <code>y</code>, all combination of the matches are returned.</p>
+<p><code>full_join(x, y)</code>: returns all rows and all columns from both <code>x</code> and <code>y</code>. Where there are not matching values, the function returns <code>NA</code> for the one missing.</p>
+<p>The joins mentioned above are examples of mutating joins since they combine variables from two datasets.</p>
+</div>
+<div id="missing-keys" class="section level2">
+<h2>Missing keys</h2>
+<p>Suppose you have two datasets. The first dataset is called <code>size</code> and contains the names of people and their shirt size:</p>
+<pre><code>&gt; size
+name size
+1  Tom    M
+2  Dan   XL
+3 Keil    S</code></pre>
+<p>The second dataset is called <code>color</code> and contains the people’s surnames, shirt color preferences, and stores some information in the <code>row.names</code> attribute:</p>
+<pre><code>&gt; color
+     surname color
+Tom     Jeon  &lt;NA&gt;
+Dan    Smith  Dark
+Bob McLadden Light</code></pre>
+<p>Notice what could go wrong here? Two-table joins can get complicated when there are missing keys or duplicate keys. In this example, R’s data frames store important information in the <code>row.names</code> attribute. When this is the case, you won’t be able to access the key with a join function, as join functions can only access columns of the data frame.</p>
+<p>The trick to easily fix this problem is to use the <code>rownames_to_column()</code> function from the <code>tibble</code> package. It returns a copy of your dataset with the row names added to the data as a column. The first argument to <code>rownames_to_column()</code> is your data frame object and the second argument is a string specifying the name of the column you want to add.</p>
+<p>Try exploring in the console below. datasets <code>size</code> and <code>color</code> are pre-loaded on your workspace.</p>
+<div data-datacamp-exercise="" data-height="300" data-encoded="true">
+eyJsYW5ndWFnZSI6InIiLCJwcmVfZXhlcmNpc2VfY29kZSI6ImNvbG9yIDwtIGRhdGEuZnJhbWUoc3VybmFtZSA9IGMoXCJKZW9uXCIsIFwiU21pdGhcIiwgXCJNY0xhZGRlblwiKSwgY29sb3IgPSBjKE5BLCBcIkRhcmtcIiwgXCJMaWdodFwiKSlcbnJvdy5uYW1lcyhjb2xvcikgPC0gYyhcIlRvbVwiLCBcIkRhblwiLCBcIkJvYlwiKVxuc2l6ZSA8LSBkYXRhLmZyYW1lKG5hbWUgPSBjKFwiVG9tXCIsIFwiRGFuXCIsIFwiS2VpbFwiKSwgc2l6ZSA9IGMoXCJNXCIsIFwiWExcIiwgXCJTXCIpKSIsInNhbXBsZSI6IiMgRXhwbG9yZSBoZXJlISJ9
+</div>
+</div>
+<div id="final-thoughts" class="section level2">
+<h2>Final thoughts</h2>
+<p>In the real world, data may come split across many datasets, across many different formats. Because R is designed to work with single tables of data, manipulating and combining datasets into a single table is an essential skill. Complete the <a href="https://www.datacamp.com/tracks/importing-cleaning-data-with-r">Importing &amp; Cleaning Data with R</a> skill track and learn to parse and combine data in any format. Happy learning!</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
