@@ -1,0 +1,22 @@
+---
+title: "Significance testing in R: Tutorial"
+author: "Tom Jeon"
+date: "10/16/2018"
+output:
+  html_document:
+    self_contained: false
+---
+
+```{r, include=FALSE}
+tutorial::go_interactive()
+```
+
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Significance Testing in R Tutorial
+
+### In this tutorial, you'll learn to test for statistical significance using R!
+
